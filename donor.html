@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module" src="js/system/donor.js"></script>
+    <title>Donors</title>
+  </head>
+  <body>
+    <div id="loader"></div>
+    <div class="row" id="hide">
+      <div class="col-2 fixed-sidebar shadow">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="120px" />
+        </div>
+        <br />
+        <div id="nav_loader"></div>
+        <div>
+          <a href="dashboard.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-dashboard.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Dashboard</span>
+          </a>
+        </div>
+        <div>
+          <a href="inventory.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-inventory.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Inventory</span>
+          </a>
+        </div>
+        <div>
+          <a href="event.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-event.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Events</span>
+          </a>
+        </div>
+        <div>
+          <a href="request.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+        <div id="hideLink">
+          <a href="donor.html" class="nav-link d-flex focus">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/w-donor.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Donors</span>
+          </a>
+        </div>
+        <div>
+          <a href="user.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-users.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Users</span>
+          </a>
+        </div>
+        <div>
+          <a href="profile.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-profile.png" alt="" width="20px" />
+            </div>
+            <span class="padding">Profile</span>
+          </a>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <!-- logout -->
+        <div class="logout">
+          <span
+            class="nav-link d-flex opacity ms-1"
+            type="submit"
+            id="btn_logout"
+          >
+            <div class="ms-4 p-2">
+              <img src="assets/icon/logout.png" alt="" width="20px" />
+              <span class="ms-1">Log out</span>
+            </div>
+          </span>
+        </div>
+        <!-- logout -->
+        <br /><br /><br />
+      </div>
+      <div class="col-10 bg content-area">
+        <div class="container mt-4">
+          <h4 class="fw-bold">Donors</h4>
+          <span>Manage donors</span>
+          <form id="search_form">
+            <div class="d-flex mb-3 mt-2 ms-1 mt-4">
+              <input
+                type="text"
+                placeholder="Search for name, location, gender, or blood type"
+                class="me-2 py-2 ps-3"
+                style="
+                  border: 2px #b43929 solid;
+                  width: 1135px;
+                  border-radius: 5px;
+                "
+                name="keyword"
+              />
+
+              <button
+                type="submit"
+                class="btn"
+                style="color: white; background-color: #b43929"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+          <div
+            class="bg-white p-3 ms-1 mb-3 rounded-3 mt-3 shadow-sm bg-white"
+            style="width: 1216px"
+            card-size
+          >
+            <div class="d-flex">
+              <span class="fw-bold font-size d-flex ms-2 mb-3 mt-1">
+                List of Donors</span
+              >
+              <button
+                class="createEventButton bloodCompatibilityChecker"
+                style="right: 50px; bottom: 508px; background-color: #b43929"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#createDonorModal"
+              >
+                Create Donor
+              </button>
+              <button
+                type="button"
+                class="bloodCompatibilityChecker"
+                style="right: 170px; bottom: 508px; background-color: #b43929"
+                data-bs-toggle="modal"
+                data-bs-target="#CompatibilityCheckerModal"
+              >
+                Blood Compatibility Checker
+              </button>
+              <button
+                id="generateDonorReport"
+                class="generateReport bg-secondary"
+                style="right: 387px; bottom: 508px"
+              >
+                Generate Report
+              </button>
+            </div>
+            <div
+              class="d-flex shadow-sm mt-2"
+              style="
+                background-color: #b43929 !important;
+                color: white;
+                font-weight: bold;
+                border-radius: 10px;
+              "
+            >
+              <div class="has-body">Name</div>
+              <div class="has-body">Blood type</div>
+              <div class="has-body">Address</div>
+              <div class="has-body">Phone number</div>
+              <div class="has-body">Email</div>
+              <div class="has-body">status</div>
+              <div class="has-body">Action</div>
+            </div>
+
+            <div id="get_donors"></div>
+            <div
+              class="d-flex justify-content-center mt-3"
+              style="margin-bottom: -20px"
+            >
+              <nav aria-label="Page navigation example">
+                <ul class="pagination" id="pages"></ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Donor -->
+    <div
+      class="modal fade"
+      id="createDonorModal"
+      tabindex="-1"
+      aria-labelledby="createDonorModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div id="createDonorModalLabel">
+              <span class="fw-bold fs-5">Create Donor</span> <br />
+            </div>
+          </div>
+          <div class="modal-body px-4">
+            <form id="donor_form">
+              <input type="hidden" id="user_id" name="user_id" />
+              <p class="fw-bold font-size">Donor Details</p>
+              <div class="d-flex gap-2 mt-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="fullname"
+                    name="fullname"
+                  />
+                  <label for="fullname">Full Name</label>
+                </div>
+
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="age"
+                    name="age"
+                  />
+                  <label for="age">Age</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="Date"
+                    class="form-control"
+                    id="birthday"
+                    name="birthday"
+                  />
+                  <label for="birthday">Date of Birth</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <select class="form-select" id="gender" name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="All">All</option>
+                  </select>
+                  <label for="gender">Gender</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <select class="form-select" id="blood_type" name="blood_type">
+                    <option value="O-">O-</option>
+                    <option value="O+">O+</option>
+                    <option value="A-">A-</option>
+                    <option value="A+">A+</option>
+                    <option value="B-">B-</option>
+                    <option value="B+">B+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="AB+">AB+</option>
+                  </select>
+                  <label for="blood_type">Blood Type</label>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="address"
+                    name="address"
+                  />
+                  <label for="address">Address</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email_address"
+                  />
+                  <label for="email">Email Address</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="phonenumber"
+                    name="phonenumber"
+                  />
+                  <label for="phonenumber">Phone Number</label>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <textarea
+                    class="form-control"
+                    id="medical_history"
+                    name="medical_history"
+                    style="height: 150px"
+                  ></textarea>
+                  <label for="medical_history"
+                    >Medical History (optional)</label
+                  >
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <textarea
+                    class="form-control"
+                    id="current_medications"
+                    name="current_medications"
+                    style="height: 150px"
+                  ></textarea>
+                  <label for="current_medications"
+                    >Current Medications (optional)</label
+                  >
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <textarea
+                    class="form-control"
+                    id="allergies"
+                    name="allergies"
+                    style="height: 150px"
+                  ></textarea>
+                  <label for="allergies">Allergies (optional)</label>
+                </div>
+              </div>
+              <div class="form-floating mb-3 flex-grow-1">
+                <input
+                  class="form-control"
+                  id="previous_donation"
+                  name="previous_donation"
+                  style="height: 150px"
+                  required
+                />
+                <label for="previous_donation">Previous Donation</label>
+              </div>
+
+              <br />
+              <p class="fw-bold font-size">Emergency Contact</p>
+              <div class="d-flex gap-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="emergency_name"
+                    name="emergency_name"
+                  />
+
+                  <label for="emergency_name">Full Name</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="emergency_relationship"
+                    name="emergency_relationship"
+                  />
+                  <label for="emergency_relationship">Relationship</label>
+                </div>
+
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="emergency_phonenumber"
+                    name="emergency_phonenumber"
+                  />
+                  <label for="emergency_phonenumber">Phone Number</label>
+                </div>
+              </div>
+              <hr style="width: 798px; margin-left: -15px" />
+              <div class="d-flex justify-content-end align-items-end">
+                <button
+                  type="submit"
+                  class="button1 me-2 createButton d-flex justify-content-center align-items-center"
+                >
+                  Create
+                </button>
+                <button
+                  type="button"
+                  class="buttonBack modal_close"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="CompatibilityCheckerModal"
+      tabindex="-1"
+      aria-labelledby="CompatibilityCheckerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div id="CompatibilityCheckerModalLabel">
+              <span class="fw-bold fs-5">Blood Compatibility Checker</span>
+              <br />
+            </div>
+            <button
+              type="button"
+              id="popoverButton"
+              style="
+                padding: 3px 7px 3px 7px;
+                background-color: #b43929;
+                border: 2px solid white !important;
+                border-radius: 50%;
+              "
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              data-bs-content="
+              <strong>O Positive:</strong><br>
+              Can give to: O+, A+, B+, AB+<br>
+              Can receive from: O+, O-<br><br>
+              <strong>A Positive:</strong><br>
+              Can give to: A+, AB+<br>
+              Can receive from: A+, A-, O+, O-<br><br>
+              <strong>B Positive:</strong><br>
+              Can give to: B+, AB+<br>
+              Can receive from: B+, B-, O+, O-<br><br>
+              <strong>AB Positive:</strong><br>
+              Can give to: AB+ only<br>
+              Can receive from: All blood types<br><br>
+              <strong>O Negative:</strong><br>
+              Can give to: All blood types<br>
+              Can receive from: O-<br><br>
+              <strong>A Negative:</strong><br>
+              Can give to: A-, A+, AB-, AB+<br>
+              Can receive from: A-, O-<br><br>
+              <strong>B Negative:</strong><br>
+              Can give to: B-, B+, AB-, AB+<br>
+              Can receive from: B-, O-<br><br>
+              <strong>AB Negative:</strong><br>
+              Can give to: AB-, AB+<br>
+              Can receive from: AB-, A-, B-, O-
+              "
+              title="Blood Type Compatibility"
+            >
+              <img
+                src="assets/icon/question-sign (1).png"
+                alt=""
+                width="15px"
+                height="15px"
+              />
+            </button>
+          </div>
+          <div class="modal-body px-4">
+            <form id="blood_compatibility_form">
+              <div class="d-flex">
+                <div
+                  class="form-floating mb-3 flex-grow-1 me-2"
+                  style="width: fit-content"
+                >
+                  <select class="form-select" id="blood_type" name="blood_type">
+                    <option value="O-">O-</option>
+                    <option value="O+">O+</option>
+                    <option value="A-">A-</option>
+                    <option value="A+">A+</option>
+                    <option value="B-">B-</option>
+                    <option value="B+">B+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="AB+">AB+</option>
+                  </select>
+                  <label for="blood_type">Blood Type (Recipient)</label>
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    class="btn p-3 bg-secondary"
+                    style="color: white"
+                  >
+                    Search
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div class="p-3 rounded-3">
+              <div class="d-flex">
+                <span class="fw-bold font-size d-flex ms-2 mb-2">
+                  Available stocks</span
+                >
+              </div>
+              <div
+                class="d-flex shadow-sm mt-2 bg-secondary"
+                style="font-weight: bold; color: white; border-radius: 10px"
+              >
+                <div class="has-body flex-grow-1">Blood type</div>
+                <div class="has-body flex-grow-1">Component</div>
+                <div class="has-body flex-grow-1">Units</div>
+              </div>
+              <div id="inventory"></div>
+            </div>
+            <div class="p-3 mt-3 rounded-3">
+              <div class="d-flex">
+                <span class="fw-bold font-size d-flex ms-2 mb-2">
+                  Compatible Donors</span
+                >
+              </div>
+              <div
+                class="d-flex shadow-sm mt-2 bg-secondary"
+                style="font-weight: bold; color: white; border-radius: 10px"
+              >
+                <div class="has-body flex-grow-1">Name</div>
+                <div class="has-body flex-grow-1">Blood type</div>
+                <div class="has-body flex-grow-1">Address</div>
+                <div class="has-body flex-grow-1">Phone number</div>
+                <div class="has-body flex-grow-1">status</div>
+              </div>
+              <div id="donors"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="buttonBack modal_close"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var popoverTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="popover"]')
+        );
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+          return new bootstrap.Popover(popoverTriggerEl);
+        });
+      });
+    </script>
+  </body>
+</html>

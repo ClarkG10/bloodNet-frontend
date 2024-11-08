@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/auth/login.js"></script>
+  </head>
+  <body style="overflow: hidden; background-color: white !important">
+    <div id="loader"></div>
+    <div class="container-fluid">
+      <div class="position-absolute start-0 bottom-0">
+        <img src="assets/imgs/net1.png" alt="" width="500px" height="500px" />
+      </div>
+      <div class="position-absolute top-0 end-0">
+        <img src="assets/imgs/net2.png" alt="" width="500px" height="500px" />
+      </div>
+      <div class="center shadow1 py-3 px-5 bg-white">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="280px" />
+        </div>
+        <div class="mb-3 fs-4 fw-bold text-center" style="color: #b43929">
+          Login
+        </div>
+        <form id="form_login">
+          <div class="form-floating mb-3 mx-3">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="name@example.com"
+              required
+            />
+            <label for="floatingInput">Email address</label>
+          </div>
+          <div class="form-floating mx-3 position-relative">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="Password"
+              name="password"
+              required
+            />
+            <label for="floatingPassword">Password</label>
+            <span
+              id="togglePassword"
+              class="position-absolute end-0 top-50 translate-middle-y me-3"
+              style="padding-bottom: 60px"
+            >
+              <img
+                class="opacity-50"
+                src="assets/icon/eye-slashed.png"
+                alt="Toggle Password"
+                width="17px"
+              />
+            </span>
+            <div class="mt-3 text-center">
+              <button
+                type="submit"
+                class="button d-flex align-items-center justify-content-center"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        </form>
+        <div class="text-center mt-2">
+          Don't have an account?
+          <a href="register.html" style="color: #b43929; text-decoration: none"
+            >Click Here.</a
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

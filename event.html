@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/system/event.js"></script>
+    <title>Events</title>
+  </head>
+  <body style="overflow: hidden !important">
+    <div id="loader"></div>
+    <div class="row" id="hide">
+      <div class="col-2 fixed-sidebar shadow">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="120px" />
+        </div>
+        <br />
+        <div>
+          <a href="dashboard.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-dashboard.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Dashboard</span>
+          </a>
+        </div>
+        <div>
+          <a href="inventory.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-inventory.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Inventory</span>
+          </a>
+        </div>
+        <div>
+          <a href="event.html" class="nav-link d-flex focus">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/w-event.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Events</span>
+          </a>
+        </div>
+        <div>
+          <a href="request.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+        <div id="hideLink">
+          <a href="donor.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-donor.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Donors</span>
+          </a>
+        </div>
+        <div>
+          <a href="user.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-users.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Users</span>
+          </a>
+        </div>
+        <div>
+          <a href="profile.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-profile.png" alt="" width="20px" />
+            </div>
+            <span class="padding">Profile</span>
+          </a>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <!-- logout -->
+        <div class="logout">
+          <span
+            class="nav-link d-flex opacity ms-1"
+            type="submit"
+            id="btn_logout"
+          >
+            <div class="ms-4 p-2">
+              <img src="assets/icon/logout.png" alt="" width="20px" />
+              <span class="ms-1">Log out</span>
+            </div>
+          </span>
+        </div>
+        <!-- logout -->
+        <br /><br /><br />
+      </div>
+      <div class="col-10 bg content-area">
+        <div class="container mt-4">
+          <h4 class="fw-bold">Blood Donation Events</h4>
+          <span>Schedule and announce blood donation events</span>
+
+          <form id="search_form">
+            <div class="d-flex mb-3 mt-4 ms-1">
+              <input
+                type="text"
+                placeholder="Search for event name, location, or description"
+                class="me-2 py-2 ps-3"
+                style="
+                  border: 2px #b43929 solid;
+                  width: 1135px;
+                  border-radius: 5px;
+                "
+                name="keyword"
+              />
+              <button
+                type="submit"
+                class="btn"
+                style="color: white; background-color: #b43929"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+          <div
+            class="bg-white p-3 ms-1 mb-3 rounded-3 shadow-sm bg-white"
+            style="width: 1216px"
+          >
+            <div class="d-flex">
+              <span class="fw-bold font-size d-flex mb-4 mt-1">
+                Manage Events</span
+              >
+
+              <div class="d-flex bg-white dropdown6 p-2 rounded-3 shadow-sm">
+                <div>Sort by</div>
+                <div>
+                  <select
+                    class="form-select"
+                    aria-label=""
+                    style="
+                      border: none !important;
+                      padding: 0px 28px 0px 5px;
+                      box-shadow: none;
+                    "
+                    id="sortStatus"
+                  >
+                    <option selected disabled>Status</option>
+                    <option value="All">All</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+              <button
+                id="generateEventReport"
+                class="generateReport bg-secondary"
+              >
+                Generate Report
+              </button>
+
+              <button
+                class="createEvent"
+                style="cursor: pointer"
+                data-bs-toggle="modal"
+                data-bs-target="#createEventModal"
+              >
+                Create a new event
+              </button>
+            </div>
+            <div
+              class="d-flex request-head shadow-sm"
+              style="
+                background-color: #b43929 !important;
+                color: white;
+                font-weight: bold;
+                border-radius: 10px;
+              "
+            >
+              <div class="event-hasevents">Event</div>
+              <div class="event-hasevents">Location</div>
+              <div class="event-hasevents">Start Date</div>
+              <div class="event-hasevents">End Date</div>
+              <div class="event-hasevents">Time</div>
+              <div class="event-hasevents">Status</div>
+              <div class="event-hasevents">Action</div>
+            </div>
+            <!-- For Event -->
+            <div id="get_event"></div>
+            <!-- For Event -->
+            <div
+              class="d-flex justify-content-center mt-3"
+              style="margin-bottom: -20px"
+            >
+              <nav aria-label="Page navigation example">
+                <ul class="pagination" id="pages"></ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="createEventModal"
+      tabindex="-1"
+      aria-labelledby="createEventModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div id="createEventModalLabel">
+              <span class="fw-bold fs-4">Schedule a donation event</span> <br />
+              <span style="font-size: 15px"
+                >Set up a blood donation event and invite donors</span
+              >
+            </div>
+          </div>
+          <div class="modal-body">
+            <form id="event_form">
+              <input type="hidden" id="user_id" name="user_id" />
+              <input type="hidden" name="status" value="Scheduled" />
+              <div class="d-flex gap-2 mt-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="eventName"
+                    name="event_name"
+                  />
+                  <label for="eventName">Event Name</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="eventLocation"
+                    name="event_location"
+                  />
+                  <label for="eventLocation">Location</label>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="startDate"
+                    name="start_date"
+                  />
+                  <label for="startDate">Start Date</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="endDate"
+                    name="end_date"
+                  />
+                  <label for="endDate">End Date</label>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="timeStart"
+                    name="time_start"
+                  />
+                  <label for="timeStart">Time Start</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="timeEnd"
+                    name="time_end"
+                  />
+                  <label for="timeEnd">Time End</label>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="weight"
+                    name="weight"
+                  />
+                  <label for="weight">Weight</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <select class="form-select" id="gender" name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="All">All</option>
+                  </select>
+                  <label for="gender">Gender</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="minimumAge"
+                    name="min_age"
+                  />
+                  <label for="minimumAge">Minimum Age</label>
+                </div>
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="maximumAge"
+                    name="max_age"
+                  />
+                  <label for="maximumAge">Maximum Age</label>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <textarea
+                    class="form-control"
+                    placeholder="Leave a description here"
+                    id="description"
+                    name="description"
+                    style="height: 150px"
+                  ></textarea>
+                  <label for="description">Description</label>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <div class="form-floating mb-3 flex-grow-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="contactInfo"
+                    name="contact_info"
+                  />
+                  <label for="contactInfo">Contact Information</label>
+                </div>
+              </div>
+              <hr style="width: 798px; margin-left: -15px" />
+              <div class="d-flex justify-content-end align-items-end">
+                <button
+                  type="submit"
+                  class="button1 me-2 createEventButton d-flex justify-content-center align-items-center"
+                >
+                  Create
+                </button>
+                <button
+                  type="button"
+                  class="buttonBack modal_close"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

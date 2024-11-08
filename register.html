@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/auth/register.js"></script>
+  </head>
+  <body style="overflow: hidden; background-color: white !important">
+    <div class="container-fluid">
+      <div class="position-absolute start-0 bottom-0">
+        <img src="assets/imgs/net1.png" alt="" width="500px" height="500px" />
+      </div>
+      <div class="position-absolute top-0 end-0">
+        <img src="assets/imgs/net2.png" alt="" width="500px" height="500px" />
+      </div>
+      <div class="center shadow1 py-3 px-5">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="280px" />
+        </div>
+        <div class="mb-3 fs-4 fw-bold text-center" style="color: #b43929">
+          Create account
+        </div>
+        <form id="form_register">
+          <input type="hidden" name="role" value="admin" />
+          <div class="form-floating mb-3">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="name@example.com"
+              required
+            />
+            <label for="floatingInput">Email address</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Password"
+              required
+            />
+            <label for="floatingPassword">Password</label>
+            <span
+              id="togglePassword"
+              class="position-absolute end-0 top-50 translate-middle-y me-3"
+            >
+              <img
+                class="opacity-50"
+                src="assets/icon/eye-slashed.png"
+                alt="Toggle Password"
+                width="17px"
+              />
+            </span>
+          </div>
+          <div class="form-floating">
+            <input
+              type="password"
+              class="form-control"
+              id="password_confirmation"
+              name="password_confirmation"
+              placeholder="Confirm Password"
+              required
+            />
+
+            <label for="floatingPassword">Confirm Password</label>
+            <span
+              id="togglePasswordConfirmation"
+              class="position-absolute end-0 top-50 translate-middle-y me-3"
+            >
+              <img
+                class="opacity-50"
+                src="assets/icon/eye-slashed.png"
+                alt="Toggle PasswordConfirmation"
+                width="17px"
+              />
+            </span>
+          </div>
+          <div class="mt-3 text-center">
+            <button
+              type="submit"
+              class="button d-flex align-items-center justify-content-center"
+            >
+              Create an account
+            </button>
+          </div>
+        </form>
+        <div class="text-center mt-2">
+          Already have an account?
+          <a href="index.html" style="color: #b43929; text-decoration: none"
+            >Click Here.</a
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

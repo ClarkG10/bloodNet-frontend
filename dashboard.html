@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/system/dashboard.js"></script>
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <div id="loader"></div>
+    <div class="row" id="hide">
+      <div class="col-2 fixed-sidebar shadow">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="120px" />
+        </div>
+        <br />
+        <div>
+          <div>
+            <a href="dashboard.html" class="nav-link d-flex focus">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/w-dashboard.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Dashboard</span>
+            </a>
+          </div>
+          <div>
+            <a href="inventory.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-inventory.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Inventory</span>
+            </a>
+          </div>
+          <div>
+            <a href="event.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-event.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Events</span>
+            </a>
+          </div>
+          <div>
+            <a href="request.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-request.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Requests</span>
+            </a>
+          </div>
+          <div id="hideLink">
+            <a href="donor.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-donor.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Donors</span>
+            </a>
+          </div>
+          <div>
+            <a href="user.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-users.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Users</span>
+            </a>
+          </div>
+          <div>
+            <a href="profile.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-profile.png" alt="" width="20px" />
+              </div>
+              <span class="padding">Profile</span>
+            </a>
+          </div>
+          <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+          <!-- logout -->
+          <div class="logout">
+            <span
+              class="nav-link d-flex opacity ms-1"
+              type="submit"
+              id="btn_logout"
+            >
+              <div class="ms-4 p-2">
+                <img src="assets/icon/logout.png" alt="" width="20px" />
+                <span class="ms-1">Log out</span>
+              </div>
+            </span>
+          </div>
+          <!-- logout -->
+          <br /><br /><br />
+        </div>
+      </div>
+      <div class="col-10 bg content-area">
+        <div class="container mt-4">
+          <h4 class="fw-bold">Dashboard</h4>
+          <span>Welcome Back,</span>
+          <span id="getOrgName"></span>
+
+          <div class="row mt-4 mb-3">
+            <div
+              class="col-3 shadow-sm bg-white me-3 ms-3 p-3 rounded-3 card-container"
+            >
+              <div class="d-flex mb-2">Total Blood Units</div>
+              <h4 id="getTotalUnits"></h4>
+              <div class="image-container">
+                <img
+                  src="assets/icon/w-inventory.png"
+                  alt="blood icon"
+                  width="30px"
+                />
+              </div>
+            </div>
+            <div
+              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container"
+            >
+              <div class="d-flex mb-2">Total Events</div>
+              <h4 id="getTotalEvents"></h4>
+
+              <div class="image-container">
+                <img
+                  src="assets/icon/w-event.png"
+                  alt="blood icon"
+                  width="30px"
+                />
+              </div>
+            </div>
+            <div
+              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container"
+            >
+              <div class="d-flex mb-2">Total Requests</div>
+              <h4 id="getTotalRequests"></h4>
+              <div class="image-container">
+                <img
+                  src="assets/icon/w-request.png"
+                  alt="blood icon"
+                  width="30px"
+                />
+              </div>
+            </div>
+            <div
+              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container"
+            >
+              <div class="d-flex mb-2">Total Donors</div>
+              <h4 id="getTotalDonors"></h4>
+              <div class="image-container">
+                <img
+                  src="assets/icon/w-profile.png"
+                  alt="blood icon"
+                  width="30px"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div
+              class="col-9 p-3 me-3 ms-3 rounded-3 shadow-sm bg-white"
+              style="width: 908px"
+            >
+              <span class="fw-bold font-size d-flex"
+                >Upcoming Events
+                <div class="dropdown">
+                  <div data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="assets/icon/option.png" alt="" width="25px" />
+                  </div>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a href="event.html" class="dropdown-item" type="button"
+                        >More details</a
+                      >
+                    </li>
+                  </ul>
+                </div></span
+              >
+              <div
+                class="d-flex event-head shadow-sm mt-2"
+                style="
+                  background-color: #b43929 !important;
+                  color: white;
+                  font-weight: bold;
+                  border-radius: 10px;
+                "
+              >
+                <div class="event-hasevents">Event</div>
+                <div class="event-hasevents">Location</div>
+                <div class="event-hasevents">Start Date</div>
+                <div class="event-hasevents">End Date</div>
+                <div class="event-hasevents">Action</div>
+              </div>
+
+              <div id="get_events"></div>
+            </div>
+            <div
+              class="col-3 bg-white p-3 rounded-3 shadow-sm position-relative"
+              style="width: 292px; height: 320px"
+            >
+              <div class="">
+                <span
+                  class="fw-bold font-size d-flex position-absolute fixed-top pt-3 pb-2 px-3 bg-white"
+                  >Alerts
+                  <div class="dropdown1">
+                    <div data-bs-toggle="dropdown" aria-expanded="false">
+                      <img src="assets/icon/option.png" alt="" width="25px" />
+                    </div>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a
+                          href="inventory.html"
+                          class="dropdown-item"
+                          type="button"
+                          >More details</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </span>
+              </div>
+              <div
+                class="mt-4 pt-1"
+                style="overflow-x: hidden; overflow-y: auto; height: 265px"
+              >
+                <!-- For Alert Low Stocks -->
+                <div id="lowStock"></div>
+                <!-- For Alert Low Stocks -->
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-white p-3 ms-1 mt-3 mb-3 rounded-3 shadow-sm bg-white"
+            style="width: 1216px"
+          >
+            <h5 class="fw-bold font-size d-flex">
+              Pending Requests
+              <div class="dropdown2">
+                <div data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="assets/icon/option.png" alt="" width="25px" />
+                </div>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="request.html" class="dropdown-item" type="button"
+                      >More details</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </h5>
+
+            <div
+              class="d-flex shadow-sm mt-3"
+              style="
+                background-color: #b43929 !important;
+                color: white;
+                font-weight: bold;
+                border-radius: 10px;
+              "
+            >
+              <div class="has-body">Hospital</div>
+              <div class="has-body">Rquested at</div>
+              <div class="has-body">Blood type</div>
+              <div class="has-body">Component</div>
+              <div class="has-body">Quantity</div>
+              <div class="has-body">Urgency</div>
+              <div class="has-body">Action</div>
+            </div>
+            <div id="get_requests"></div>
+          </div>
+          <div
+            class="bg-white p-3 ms-1 rounded-3 mt-3 shadow-sm bg-white"
+            style="width: 1216px"
+          >
+            <div class="d-flex">
+              <span class="fw-bold font-size d-flex ms-2 mb-1">
+                List of Donors
+                <div class="dropdown2">
+                  <div data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="assets/icon/option.png" alt="" width="25px" />
+                  </div>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a href="donor.html" class="dropdown-item" type="button"
+                        >View more donors</a
+                      >
+                    </li>
+                  </ul>
+                </div></span
+              >
+            </div>
+            <div
+              class="d-flex shadow-sm mt-2"
+              style="
+                background-color: #b43929 !important;
+                color: white;
+                font-weight: bold;
+                border-radius: 10px;
+              "
+            >
+              <div class="has-body">Name</div>
+              <div class="has-body">Blood type</div>
+              <div class="has-body">Address</div>
+              <div class="has-body">Phone number</div>
+              <div class="has-body">Email</div>
+              <div class="has-body">status</div>
+              <div class="has-body">Action</div>
+            </div>
+
+            <div id="get_donors"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

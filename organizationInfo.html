@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post-Registration</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/system/organizationInfo.js"></script>
+  </head>
+  <body style="background-color: white !important">
+    <div id="loader"></div>
+    <div class="center1 px-4">
+      <div class="row">
+        <div class="col-6" style="background-color: #b43929; padding: 60px">
+          <div class="text-center">
+            <img
+              src="assets/imgs/whitelogo.png"
+              alt=""
+              width="180px"
+              height="180px"
+            />
+          </div>
+          <p class="text-white text-center mt-3 fs-5">
+            Welcome to <span class="fw-bold fs-4">BLOODNET+</span>
+          </p>
+          <div class="text-center text-white mt-4">
+            <p>
+              We're excited to help you join the blood donation community.
+              Please fill out the form to get started.
+            </p>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-container">
+            <form id="form_organization">
+              <!-- Step 1: Basic Information -->
+              <div class="step-container active" id="step1">
+                <h5>Step 1: Basic Information</h5>
+                <div class="form-floating mb-3 mt-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="orgName"
+                    name="org_name"
+                    placeholder="Organization Name"
+                    required
+                  />
+                  <label for="orgName">Organization Name</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                  <select
+                    class="form-select form-control"
+                    id="orgType"
+                    name="org_type"
+                    required
+                  >
+                    <option selected disabled>
+                      Select type of organization
+                    </option>
+                    <option value="Blood Center">Blood Center</option>
+                    <option value="Hospital">Hospital</option>
+                  </select>
+                  <label for="orgType">Types of Organization</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="orgEmail"
+                    name="org_email"
+                    placeholder="Organization Email"
+                    required
+                  />
+                  <label for="orgEmail">Organization Email</label>
+                </div>
+                <div class="d-flex align-items-end justify-content-end">
+                  <button
+                    type="button"
+                    class="button1 btn-block mt-2"
+                    onclick="nextStep(2)"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+
+              <!-- Step 2: Location Details -->
+              <div class="step-container" id="step2">
+                <h5>Step 2: Location Details</h5>
+                <div class="form-floating mb-3 mt-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="country"
+                    name="country"
+                    placeholder="Country"
+                    required
+                  />
+                  <label for="country">Country</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="city"
+                    name="city"
+                    placeholder="City"
+                    required
+                  />
+                  <label for="city">City</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="zipcode"
+                    name="zipcode"
+                    placeholder="Zip Code"
+                    required
+                  />
+                  <label for="zipcode">Zip Code</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="address"
+                    name="address"
+                    placeholder="Address"
+                    required
+                  />
+                  <label for="address">Address</label>
+                </div>
+
+                <!-- Latitude and Longitude Fields -->
+                <input type="hidden" id="latitude" name="latitude" />
+                <input type="hidden" id="longitude" name="longitude" />
+
+                <div
+                  class="text-center d-flex align-items-end justify-content-end"
+                >
+                  <button
+                    type="button"
+                    class="buttonBack btn-block mt-2 me-2"
+                    onclick="prevStep(1)"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    class="button1 btn-block mt-2"
+                    onclick="nextStep(3)"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+
+              <!-- Step 3: Additional Information -->
+              <div class="step-container" id="step3">
+                <h5>Step 3: Additional Information</h5>
+                <div class="form-floating mb-3 mt-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="operatingHour"
+                    name="operating_hour"
+                    placeholder="Operating Hour"
+                    required
+                  />
+                  <label for="operatingHour">Operating Hour & Day</label>
+                </div>
+                <div class="form-floating mb-3 d-flex">
+                  <textarea
+                    type="text"
+                    class="form-control"
+                    id="contact"
+                    name="contact_info"
+                    placeholder="Contact Information"
+                  ></textarea>
+                  <label for="contact">List of Contact Information</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <textarea
+                    class="form-control"
+                    id="description"
+                    name="description"
+                    placeholder="Description"
+                  ></textarea>
+                  <label for="description">Description</label>
+                </div>
+                <input type="hidden" id="user_id" name="user_id" />
+                <input
+                  type="hidden"
+                  name="info_complete"
+                  id="info_complete"
+                  value="true"
+                />
+
+                <div class="d-flex align-items-end justify-content-end">
+                  <div class="text-center d-flex">
+                    <button
+                      type="button"
+                      class="buttonBack btn-block me-2"
+                      onclick="prevStep(2)"
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="submit"
+                      class="button1 btn-block d-flex align-items-center justify-content-center submit"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function prevStep(step) {
+        document
+          .querySelectorAll(".step-container")
+          .forEach(function (container) {
+            container.classList.remove("active");
+          });
+        document.getElementById("step" + step).classList.add("active");
+      }
+
+      function validateStep(step) {
+        let isValid = true;
+        document
+          .querySelectorAll("#step" + step + " [required]")
+          .forEach(function (input) {
+            if (!input.value) {
+              isValid = false;
+              input.classList.add("is-invalid");
+            } else {
+              input.classList.remove("is-invalid");
+            }
+          });
+        return isValid;
+      }
+
+      function nextStep(step) {
+        if (validateStep(step - 1)) {
+          document
+            .querySelectorAll(".step-container")
+            .forEach(function (container) {
+              container.classList.remove("active");
+            });
+          document.getElementById("step" + step).classList.add("active");
+        }
+      }
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+          console.log("Geolocation is not supported by this browser.");
+        }
+      }
+
+      function showPosition(position) {
+        document.getElementById("latitude").value = position.coords.latitude;
+        document.getElementById("longitude").value = position.coords.longitude;
+        console.log(position.coords.latitude);
+        console.log(position.coords.longitude);
+      }
+
+      function showError(error) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            console.log("User denied the request for Geolocation.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            console.log("Location information is unavailable.");
+            break;
+          case error.TIMEOUT:
+            console.log("The request to get user location timed out.");
+            break;
+          case error.UNKNOWN_ERROR:
+            console.log("An unknown error occurred.");
+            break;
+        }
+      }
+      window.onload = getLocation;
+    </script>
+  </body>
+</html>

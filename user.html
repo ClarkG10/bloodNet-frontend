@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/utils/utils.js" defer></script>
+    <script type="module" src="js/system/user.js" defer></script>
+    <title>Users</title>
+  </head>
+  <body>
+    <div id="loader"></div>
+    <div class="row" id="hide">
+      <div class="col-2 fixed-sidebar shadow">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="120px" />
+        </div>
+        <br />
+        <div id="nav_loader"></div>
+        <div class="d-none HospitalLink">
+          <a href="dashboardH.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-dashboard.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Dashboard</span>
+          </a>
+        </div>
+        <div class="d-none BCLink">
+          <a href="dashboard.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-dashboard.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Dashboard</span>
+          </a>
+        </div>
+        <div class="d-none BCLink HospitalLink">
+          <a href="inventory.html " class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-inventory.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Inventory</span>
+          </a>
+        </div>
+        <div class="d-none BCLink">
+          <a href="event.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-event.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Events</span>
+          </a>
+        </div>
+        <div class="d-none BCLink">
+          <a href="request.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+
+        <div class="d-none BCLink">
+          <a href="donor.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-donor.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Donors</span>
+          </a>
+        </div>
+        <div class="d-none HospitalLink">
+          <a href="bloodCenter.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/map-marker-home.png" alt="" width="19px" />
+            </div>
+            <span class="padding">Blood Center</span>
+          </a>
+        </div>
+        <div class="d-none HospitalLink">
+          <a href="bloodRequest.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+        <div class="d-none HospitalLink">
+          <a href="compatibilityChecker.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-donor.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Compatibility Checker</span>
+          </a>
+        </div>
+        <div class="d-none BCLink HospitalLink">
+          <a href="user.html" class="nav-link d-flex focus">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/w-users.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Users</span>
+          </a>
+        </div>
+        <div class="d-none BCLink HospitalLink">
+          <a href="profile.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-profile.png" alt="" width="20px" />
+            </div>
+            <span class="padding">Profile</span>
+          </a>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <!-- logout -->
+        <div class="logout d-none BCLink HospitalLink">
+          <span
+            class="nav-link d-flex opacity ms-1"
+            type="submit"
+            id="btn_logout"
+          >
+            <div class="ms-4 p-2">
+              <img src="assets/icon/logout.png" alt="" width="20px" />
+              <span class="ms-1">Log out</span>
+            </div>
+          </span>
+
+          <!-- logout -->
+          <br /><br /><br />
+        </div>
+      </div>
+
+      <div class="col-10 bg content-area">
+        <div class="container mt-4">
+          <h4 class="fw-bold">User Management</h4>
+          <span>Manage users in your organization</span>
+          <div id="add_userButton"></div>
+
+          <form id="search_form">
+            <div class="d-flex mb-3 mt-2 ms-1 mt-4">
+              <input
+                type="text"
+                placeholder="Search for name, or email"
+                class="me-2 py-2 ps-3"
+                style="
+                  border: 2px #b43929 solid;
+                  width: 1135px;
+                  border-radius: 5px;
+                "
+                name="keyword"
+                id="search_keyword"
+              />
+              <button
+                type="submit"
+                class="btn"
+                style="color: white; background-color: #b43929"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+          <div
+            class="bg-white p-3 ms-1 mb-3 rounded-3 mt-3 shadow-sm bg-white"
+            style="width: 1216px"
+            card-size
+          >
+            <div class="d-flex">
+              <span class="fw-bold font-size d-flex ms-2 mb-2 mt-1">
+                Admins</span
+              >
+            </div>
+
+            <div id="get_admin"></div>
+            <div id="get_staffAdmin"></div>
+          </div>
+
+          <div
+            class="bg-white p-3 ms-1 mb-3 rounded-3 mt-3 shadow-sm bg-white"
+            style="width: 1216px"
+            card-size
+          >
+            <div class="d-flex">
+              <span class="fw-bold font-size d-flex ms-2 mb-2 mt-1">
+                Users</span
+              >
+            </div>
+            <div id="get_staff"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create New User Modal -->
+    <div
+      class="modal fade"
+      id="createUserModal"
+      tabindex="-1"
+      aria-labelledby="createUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createUserModalLabel">
+              Create new user
+            </h5>
+          </div>
+          <div class="modal-body">
+            <form id="createUser_form">
+              <input type="hidden" id="user_id" name="user_id" />
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullname"
+                  name="fullname"
+                  placeholder="Fullname"
+                  required
+                />
+                <label for="fullname">Fullname</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
+                <label for="password">Password</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password_confirmation"
+                  name="password_confirmation"
+                  placeholder="Password Confirmation"
+                  required
+                />
+                <label for="password_confirmation">Password Confirmation</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  placeholder="Email Address"
+                  required
+                />
+                <label for="email">Email Address</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="phonenumber"
+                  name="phonenumber"
+                  placeholder="Phone Number"
+                  required
+                />
+                <label for="phonenumber">Phone Number</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address"
+                  name="address"
+                  placeholder="Address"
+                  required
+                />
+                <label for="address">Address</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select
+                  class="form-select form-control"
+                  id="role"
+                  name="role"
+                  required
+                >
+                  <option selected disabled>Select Role</option>
+                  <option value="admin">Admin</option>
+                  <option value="staff">Staff</option>
+                </select>
+                <label for="role">Role</label>
+              </div>
+              <hr />
+              <div class="d-flex align-items-end justify-content-end adds">
+                <button
+                  type="submit"
+                  class="button1 me-2 add lign-items-center justify-content-center"
+                >
+                  Create
+                </button>
+                <button
+                  type="button"
+                  class="buttonBack modal_close"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Create New User Modal -->
+  </body>
+</html>

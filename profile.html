@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/system/profile.js"></script>
+    <title>Profile</title>
+  </head>
+  <body>
+    <div id="loader"></div>
+    <div class="row" id="hide">
+      <div class="col-2 fixed-sidebar shadow">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="120px" />
+        </div>
+        <br />
+        <div id="nav_loader"></div>
+        <div class="d-none HospitalLink">
+          <a href="dashboardH.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-dashboard.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Dashboard</span>
+          </a>
+        </div>
+        <div class="d-none BCLink">
+          <a href="dashboard.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-dashboard.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Dashboard</span>
+          </a>
+        </div>
+        <div class="d-none BCLink HospitalLink">
+          <a href="inventory.html " class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-inventory.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Inventory</span>
+          </a>
+        </div>
+        <div class="d-none BCLink">
+          <a href="event.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-event.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Events</span>
+          </a>
+        </div>
+        <div class="d-none BCLink">
+          <a href="request.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+
+        <div class="d-none BCLink">
+          <a href="donor.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-donor.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Donors</span>
+          </a>
+        </div>
+        <div class="d-none HospitalLink">
+          <a href="bloodCenter.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/map-marker-home.png" alt="" width="19px" />
+            </div>
+            <span class="padding">Blood Center</span>
+          </a>
+        </div>
+        <div class="d-none HospitalLink">
+          <a href="bloodRequest.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+        <div class="d-none HospitalLink">
+          <a href="compatibilityChecker.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-donor.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Compatibility Checker</span>
+          </a>
+        </div>
+        <div class="d-none BCLink HospitalLink">
+          <a href="user.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-profile.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Users</span>
+          </a>
+        </div>
+        <div class="d-none BCLink HospitalLink">
+          <a href="profile.html" class="nav-link d-flex focus">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/w-profile.png" alt="" width="20px" />
+            </div>
+            <span class="padding">Profile</span>
+          </a>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <!-- logout -->
+        <div class="logout d-none BCLink HospitalLink">
+          <span
+            class="nav-link d-flex opacity ms-1"
+            type="submit"
+            id="btn_logout"
+          >
+            <div class="ms-4 p-2">
+              <img src="assets/icon/logout.png" alt="" width="20px" />
+              <span class="ms-1">Log out</span>
+            </div>
+          </span>
+
+          <!-- logout -->
+          <br /><br /><br />
+        </div>
+      </div>
+      <div class="col-10 bg content-area">
+        <div class="container mt-4">
+          <div
+            class="bg-white p-4 ms-1 mt-3 mb-3 rounded-3 shadow-sm position-relative pt-4"
+            style="width: 1216px; height: 680px; overflow: hidden"
+          >
+            <h4 class="fw-bold mb-3">Profile</h4>
+            <div id="orgProfile"></div>
+            <div
+              class="position-absolute end-0"
+              style="
+                transform: scaleX(-1);
+                transform-origin: center;
+                bottom: -30px;
+              "
+            >
+              <img
+                src="assets/imgs/net1.png"
+                alt=""
+                width="300px"
+                style="rotate: 50% !important"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

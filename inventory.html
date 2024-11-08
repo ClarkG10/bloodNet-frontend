@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="js/utils/utils.js" defer></script>
+    <script type="module" src="js/system/inventory.js" defer></script>
+    <title>Blood Inventory</title>
+  </head>
+  <body>
+    <div id="loader"></div>
+    <div class="row" id="hide">
+      <div class="col-2 fixed-sidebar shadow">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="120px" />
+        </div>
+        <br />
+        <div id="nav_loader"></div>
+        <div class="d-none HospitalLink">
+          <a href="dashboardH.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-dashboard.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Dashboard</span>
+          </a>
+        </div>
+        <div class="d-none BCLink">
+          <a href="dashboard.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-dashboard.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Dashboard</span>
+          </a>
+        </div>
+        <div class="d-none BCLink HospitalLink">
+          <a href="inventory.html " class="nav-link d-flex focus">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/w-inventory.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Inventory</span>
+          </a>
+        </div>
+        <div class="d-none BCLink">
+          <a href="event.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-event.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Events</span>
+          </a>
+        </div>
+        <div class="d-none BCLink">
+          <a href="request.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+
+        <div class="d-none BCLink">
+          <a href="donor.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-donor.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Donors</span>
+          </a>
+        </div>
+        <div class="d-none HospitalLink">
+          <a href="bloodCenter.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/map-marker-home.png" alt="" width="19px" />
+            </div>
+            <span class="padding">Blood Center</span>
+          </a>
+        </div>
+        <div class="d-none HospitalLink">
+          <a href="bloodRequest.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+        <div class="d-none HospitalLink">
+          <a href="compatibilityChecker.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-donor.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Compatibility Checker</span>
+          </a>
+        </div>
+        <div class="d-none BCLink HospitalLink">
+          <a href="user.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-users.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Users</span>
+          </a>
+        </div>
+        <div class="d-none BCLink HospitalLink">
+          <a href="profile.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-profile.png" alt="" width="20px" />
+            </div>
+            <span class="padding">Profile</span>
+          </a>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <!-- logout -->
+        <div class="logout d-none BCLink HospitalLink">
+          <span
+            class="nav-link d-flex opacity ms-1"
+            type="submit"
+            id="btn_logout"
+          >
+            <div class="ms-4 p-2">
+              <img src="assets/icon/logout.png" alt="" width="20px" />
+              <span class="ms-1">Log out</span>
+            </div>
+          </span>
+
+          <!-- logout -->
+          <br /><br /><br />
+        </div>
+      </div>
+
+      <div class="col-10 bg content-area">
+        <div class="container mt-4">
+          <h4 class="fw-bold">Blood Inventory</h4>
+          <span>Manage blood supply</span>
+          <br /><br />
+          <button
+            class="openbtn position-absolute end-0 top-0"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight"
+          >
+            <img src="assets/icon/time-past.png" width="25px" />
+          </button>
+
+          <div
+            class="offcanvas offcanvas-end"
+            tabindex="-1"
+            id="offcanvasRight"
+            aria-labelledby="offcanvasRightLabel"
+          >
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title fw-bold" id="offcanvasRightLabel">
+                History
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+                tabindex="-1"
+              ></button>
+            </div>
+            <div class="offcanvas-body">
+              <div id="stocksHistory"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div
+              class="col-10 bg-white p-3 ms-3 rounded-3 shadow-sm"
+              style="width: 950px; position: relative; height: fit-content"
+            >
+              <div class="d-flex">
+                <span class="fw-bold font-size mt-1 mb-4">Manage blood</span>
+                <div
+                  class="d-flex bg-white dropdown3 p-2 rounded-3 shadow-sm"
+                  style="right: 295px"
+                >
+                  <div>Sort by</div>
+                  <div>
+                    <select
+                      class="form-select"
+                      aria-label=""
+                      style="
+                        border: none !important;
+                        padding: 0px 33px 0px 5px;
+                        box-shadow: none;
+                      "
+                      id="sortComponent"
+                    >
+                      <option selected disabled>Component</option>
+                      <option value="All">All</option>
+                      <option value="Whole Blood">Whole Blood</option>
+                      <option value="Red Blood Cells">Red Blood Cells</option>
+                      <option value="White Blood Cells">
+                        White Blood Cells
+                      </option>
+                      <option value="Platelets">Platelets</option>
+                      <option value="Plasma">Plasma</option>
+                      <option value="Cryoprecipitate">Cryoprecipitate</option>
+                      <option value="Granulocytes">Granulocytes</option>
+                    </select>
+                  </div>
+                </div>
+                <button
+                  id="generateInventoryReport"
+                  class="generateReport bg-secondary"
+                  style="right: 150px"
+                >
+                  Generate Report
+                </button>
+                <button
+                  class="addStocks"
+                  style="cursor: pointer"
+                  data-bs-toggle="modal"
+                  data-bs-target="#inventoryModal"
+                >
+                  Add new stocks
+                </button>
+              </div>
+
+              <div>
+                <div
+                  class="d-flex inventory-head shadow-sm"
+                  style="
+                    background-color: #b43929 !important;
+                    border-radius: 10px;
+                  "
+                >
+                  <div class="inventory-body fw-bold text-white">
+                    Blood Type
+                  </div>
+                  <div class="inventory-body fw-bold text-white">Rh factor</div>
+                  <div class="inventory-body fw-bold text-white">Component</div>
+                  <div class="inventory-body fw-bold text-white">Units</div>
+                  <div class="inventory-body fw-bold text-white">Action</div>
+                </div>
+
+                <div id="blood_stocks"></div>
+                <div class="d-flex justify-content-center mt-3">
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination" id="pages"></ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-2 bg-white p-3 ms-3 rounded-3 shadow-sm"
+              style="width: 250px; position: relative; height: fit-content"
+            >
+              <span
+                class="fw-bold font-size mt-1 mb-3 justify-content-center d-flex align-items-center"
+                >Alert Low Stocks
+              </span>
+              <div
+                class="mt-1"
+                style="overflow-x: hidden; overflow-y: auto; max-height: 500px"
+              >
+                <div id="alerts"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div
+      class="modal fade"
+      id="inventoryModal"
+      tabindex="-1"
+      aria-labelledby="inventoryModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="inventoryModalLabel">
+              Add Blood Stocks
+            </h5>
+          </div>
+          <div class="modal-body">
+            <form id="inventory_form">
+              <input type="hidden" id="user_id" name="user_id" />
+              <div class="form-floating mb-3">
+                <select
+                  class="form-select form-control"
+                  id="bloodTypes"
+                  name="blood_type"
+                  required
+                >
+                  <option selected disabled>Select types of Blood</option>
+                  <option value="O">O</option>
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="AB">AB</option>
+                </select>
+                <label for="rhFactor">Types of Blood</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select
+                  class="form-select form-control"
+                  id="rhFactor"
+                  name="rh_factor"
+                  required
+                >
+                  <option selected disabled>Select types of Rh factor</option>
+                  <option value="+">+</option>
+                  <option value="-">-</option>
+                </select>
+                <label for="rhFactor">Types of Rh Factor</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select
+                  class="form-select form-control"
+                  id="component"
+                  name="component"
+                  required
+                >
+                  <option selected disabled>Select types of Component</option>
+                  <option value="Whole Blood">Whole Blood</option>
+                  <option value="Red Blood Cells">Red Blood Cells</option>
+                  <option value="White Blood Cells">White Blood Cells</option>
+                  <option value="Platelets">Platelets</option>
+                  <option value="Plasma">Plasma</option>
+                  <option value="Cryoprecipitate">Cryoprecipitate</option>
+                  <option value="Granulocytes">Granulocytes</option>
+                </select>
+                <label for="rhFactor">Types of Components</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="units"
+                  name="avail_blood_units"
+                  placeholder="Units"
+                  required
+                />
+                <label for="units">Units</label>
+              </div>
+              <hr />
+              <div class="d-flex align-items-end justify-content-end">
+                <button
+                  type="submit"
+                  id="add"
+                  class="button1 me-2 add d-flex align-items-center justify-content-center"
+                  style="font-size: 16px"
+                >
+                  Add
+                </button>
+                <button
+                  type="button"
+                  id="modal_close"
+                  class="buttonBack modal_close"
+                  data-bs-dismiss="modal"
+                  style="font-size: 16px"
+                >
+                  Close
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Inventory Modal -->
+  </body>
+</html>

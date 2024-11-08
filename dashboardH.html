@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/system/dashboardH.js"></script>
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <div id="loader"></div>
+    <div class="row" id="hide">
+      <div class="col-2 fixed-sidebar shadow">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="120px" />
+        </div>
+        <br />
+        <div>
+          <div>
+            <a href="dashboardH.html" class="nav-link d-flex focus">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/w-dashboard.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Dashboard</span>
+            </a>
+          </div>
+          <div>
+            <a href="inventory.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-inventory.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Inventory</span>
+            </a>
+          </div>
+          <div>
+            <a href="bloodCenter.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img
+                  src="assets/icon/map-marker-home.png"
+                  alt=""
+                  width="19px"
+                />
+              </div>
+              <span class="padding">Blood Center</span>
+            </a>
+          </div>
+          <a href="bloodRequest.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+        <div>
+          <a href="compatibilityChecker.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-donor.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Compatibility Checker</span>
+          </a>
+        </div>
+        <div>
+          <a href="user.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-users.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Users</span>
+          </a>
+        </div>
+        <div>
+          <a href="profile.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-profile.png" alt="" width="20px" />
+            </div>
+            <span class="padding">Profile</span>
+          </a>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <!-- logout -->
+        <div class="logout">
+          <span
+            class="nav-link d-flex opacity ms-1"
+            type="submit"
+            id="btn_logout"
+          >
+            <div class="ms-4 p-2">
+              <img src="assets/icon/logout.png" alt="" width="20px" />
+              <span class="ms-1">Log out</span>
+            </div>
+          </span>
+        </div>
+        <!-- logout -->
+        <br /><br /><br />
+      </div>
+      <div class="col-10 bg content-area">
+        <div class="container mt-4">
+          <h4 class="fw-bold">Dashboard</h4>
+          <span>Welcome Back, <span id="getOrgName"></span></span>
+
+          <div class="row">
+            <div class="col-md-3">
+              <div>
+                <div
+                  class="shadow-sm bg-white me-2 p-3 rounded-3 card-container mb-4 mt-4 ms-1"
+                >
+                  <div class="d-flex mb-2">Total Blood Units</div>
+                  <h4 id="getTotalUnits"></h4>
+                  <div class="image-container">
+                    <img
+                      src="assets/icon/w-inventory.png"
+                      alt="blood icon"
+                      width="30px"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  class="shadow-sm bg-white me-2 p-3 rounded-3 card-container ms-1"
+                >
+                  <div class="d-flex mb-2">Total Requests</div>
+                  <h4 id="getTotalRequests"></h4>
+                  <div class="image-container">
+                    <img
+                      src="assets/icon/w-request.png"
+                      alt="blood icon"
+                      width="30px"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div
+                class="bg-white p-3 rounded-3 mt-4 me-4 shadow-sm"
+                style="height: 224px"
+              >
+                <h5 class="card-title font-size fw-bold">Bar Chart</h5>
+                <span id="barChartLoader"></span>
+                <canvas id="inventoryBarChart" height="60"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-3">
+              <div
+                class="bg-white p-3 ms-1 mt-3 rounded-3 shadow-sm"
+                style="height: 280px"
+              >
+                <span class="fw-bold font-size d-flex"
+                  >Alerts
+                  <div style="position: absolute; right: 980px">
+                    <div data-bs-toggle="dropdown" aria-expanded="false">
+                      <img src="assets/icon/option.png" alt="" width="25px" />
+                    </div>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a
+                          href="inventory.html"
+                          class="dropdown-item"
+                          type="button"
+                          >More details</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </span>
+                <div
+                  class="mt-3"
+                  style="overflow-x: hidden; overflow-y: auto; height: 210px"
+                >
+                  <!-- For Alert Low Stocks -->
+                  <div id="lowStock"></div>
+                  <!-- For Alert Low Stocks -->
+                </div>
+              </div>
+            </div>
+            <div class="col-9">
+              <div
+                class="bg-white p-3 rounded-3 mt-3 me-4 shadow-sm"
+                style="height: 280px"
+              >
+                <h5 class="card-title font-size fw-bold">Line Chart</h5>
+                <span id="lineChartLoader"></span>
+                <canvas id="inventoryLineChart" height="75"></canvas>
+              </div>
+            </div>
+          </div>
+          <div
+            class="p-3 ms-1 mt-3 me-4 rounded-3 shadow-sm bg-white"
+            style="height: fit-content"
+          >
+            <h5 class="fw-bold font-size d-flex">
+              Pending Requests
+              <div style="position: absolute; right: 70px">
+                <div data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="assets/icon/option.png" alt="" width="25px" />
+                </div>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="request.html" class="dropdown-item" type="button"
+                      >More details</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </h5>
+
+            <div
+              class="d-flex shadow-sm mt-3"
+              style="
+                background-color: #b43929 !important;
+                color: white;
+                font-weight: bold;
+                border-radius: 10px;
+              "
+            >
+              <div class="has-body">Blood Center</div>
+              <div class="has-body">Rquested at</div>
+              <div class="has-body">Blood type</div>
+              <div class="has-body">Component</div>
+              <div class="has-body">Quantity</div>
+              <div class="has-body">Urgency</div>
+              <div class="has-body">Action</div>
+            </div>
+            <div id="get_requests"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
+  </body>
+</html>

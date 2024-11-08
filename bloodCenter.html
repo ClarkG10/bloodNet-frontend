@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/system/bloodCenter.js"></script>
+    <title>Blood Center</title>
+  </head>
+  <body>
+    <div id="loader"></div>
+    <div class="row" id="hide">
+      <div class="col-2 fixed-sidebar shadow">
+        <div class="text-center">
+          <img src="assets/imgs/letterlogo.png" alt="" width="120px" />
+        </div>
+        <br />
+        <div>
+          <div>
+            <a href="dashboardH.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-dashboard.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Dashboard</span>
+            </a>
+          </div>
+          <div>
+            <a href="inventory.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-inventory.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Inventory</span>
+            </a>
+          </div>
+          <div>
+            <a href="bloodCenter.html" class="nav-link d-flex focus">
+              <div class="ms-4 p-2">
+                <img
+                  src="assets/icon/map-marker-home (1).png"
+                  alt=""
+                  width="19px"
+                />
+              </div>
+              <span class="padding">Blood Center</span>
+            </a>
+          </div>
+          <div>
+            <a href="bloodRequest.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-request.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Requests</span>
+            </a>
+          </div>
+          <div>
+            <a href="compatibilityChecker.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-donor.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Compatibility Checker</span>
+            </a>
+          </div>
+          <div>
+            <a href="user.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-users.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Users</span>
+            </a>
+          </div>
+          <div>
+            <a href="profile.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-profile.png" alt="" width="20px" />
+              </div>
+              <span class="padding">Profile</span>
+            </a>
+          </div>
+          <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+          <!-- logout -->
+          <div class="logout">
+            <span
+              class="nav-link d-flex opacity ms-1"
+              type="submit"
+              id="btn_logout"
+            >
+              <div class="ms-4 p-2">
+                <img src="assets/icon/logout.png" alt="" width="20px" />
+                <span class="ms-1">Log out</span>
+              </div>
+            </span>
+          </div>
+          <!-- logout -->
+          <br /><br /><br />
+        </div>
+      </div>
+      <div class="col-10 bg content-area">
+        <div class="container mt-4">
+          <h4 class="fw-bold">Blood Centers</h4>
+          <span>Request blood from blood centers</span>
+        </div>
+        <form id="search_form">
+          <div class="d-flex mb-3 mt-2 ms-3 mt-4">
+            <input
+              type="text"
+              placeholder="Search for name, city, or address"
+              class="me-2 py-2 ps-3"
+              style="
+                border: 2px #b43929 solid;
+                width: 1135px;
+                border-radius: 5px;
+              "
+              name="keyword"
+            />
+            <button
+              type="submit"
+              class="btn"
+              style="color: white; background-color: #b43929"
+            >
+              Search
+            </button>
+          </div>
+        </form>
+        <div
+          class="bg-white p-3 ms-1 mb-3 rounded-3 mt-3 shadow-sm bg-white ms-3"
+          style="width: 1216px"
+          card-size
+        >
+          <div class="d-flex">
+            <span class="fw-bold font-size d-flex ms-2 mb-2 mt-1">
+              List of Blood Center</span
+            >
+          </div>
+          <div id="get_bloodCenters"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
