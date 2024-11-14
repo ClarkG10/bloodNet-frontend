@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
     <script type="module" src="js/utils/utils.js" defer></script>
-    <script type="module" src="js/system/inventory.js" defer></script>
+    <script type="module" src="js/system/reserveBlood.js" defer></script>
     <title>Blood Inventory</title>
   </head>
   <body>
@@ -41,17 +41,17 @@
           </a>
         </div>
         <div class="d-none BCLink HospitalLink">
-          <a href="inventory.html " class="nav-link d-flex focus">
+          <a href="inventory.html " class="nav-link d-flex opacity">
             <div class="ms-4 p-2">
-              <img src="assets/icon/w-inventory.png" alt="" width="18px" />
+              <img src="assets/icon/b-inventory.png" alt="" width="18px" />
             </div>
             <span class="padding">Inventory</span>
           </a>
         </div>
         <div class="d-none BCLink HospitalLink">
-          <a href="reserveBlood.html" class="nav-link d-flex opacity">
+          <a href="reserveBlood.html" class="nav-link d-flex focus">
             <div class="ms-4 p-2">
-              <img src="assets/icon/b-inventory.png" alt="" width="18px" />
+              <img src="assets/icon/w-inventory.png" alt="" width="18px" />
             </div>
             <span class="padding">Reserve Blood</span>
           </a>
@@ -64,6 +64,7 @@
             <span class="padding">Events</span>
           </a>
         </div>
+
         <div class="d-none BCLink">
           <a
             href="request.html"
@@ -80,6 +81,15 @@
             </div>
           </a>
         </div>
+        <div class="d-none HospitalLink">
+          <a href="request.html" class="nav-link d-flex opacity">
+            <div class="ms-4 p-2">
+              <img src="assets/icon/b-request.png" alt="" width="18px" />
+            </div>
+            <span class="padding">Requests</span>
+          </a>
+        </div>
+
         <div class="d-none BCLink">
           <a href="donor.html" class="nav-link d-flex opacity">
             <div class="ms-4 p-2">
@@ -94,14 +104,6 @@
               <img src="assets/icon/map-marker-home.png" alt="" width="19px" />
             </div>
             <span class="padding">Blood Center</span>
-          </a>
-        </div>
-        <div class="d-none HospitalLink">
-          <a href="bloodRequest.html" class="nav-link d-flex opacity">
-            <div class="ms-4 p-2">
-              <img src="assets/icon/b-request.png" alt="" width="18px" />
-            </div>
-            <span class="padding">Requests</span>
           </a>
         </div>
         <div class="d-none HospitalLink">
@@ -149,8 +151,8 @@
 
       <div class="col-10 bg content-area">
         <div class="container mt-4">
-          <h4 class="fw-bold">Blood Inventory</h4>
-          <span>Manage blood supply</span>
+          <h4 class="fw-bold">Reserve Blood Inventory</h4>
+          <span>Manage reserve blood supply</span>
           <br /><br />
           <button
             class="openbtn position-absolute end-0 top-0"
@@ -190,7 +192,9 @@
               style="width: 950px; position: relative; height: fit-content"
             >
               <div class="d-flex">
-                <span class="fw-bold font-size mt-1 mb-4">Manage blood</span>
+                <span class="fw-bold font-size mt-1 mb-4"
+                  >Manage reserve blood</span
+                >
                 <div
                   class="d-flex bg-white dropdown3 p-2 rounded-3 shadow-sm"
                   style="right: 295px"

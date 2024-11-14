@@ -2,8 +2,8 @@ import { backendURL, logout, userlogged, jsonToCSV, setRoleAndPermission, format
 
 logout();
 userlogged();
-getPendingRequest();
 setRoleAndPermission();
+getPendingRequest();
 
 const inventory_form = document.getElementById("inventory_form");
 const generateReportButton = document.getElementById("generateInventoryReport");
@@ -17,7 +17,7 @@ inventory_form.onsubmit = async (e) => {
 
     const formData = new FormData(inventory_form);
 
-    const getInventoryResponse = await fetch(backendURL + "/api/mobile/inventory", {
+    const getInventoryResponse = await fetch(backendURL + "/api/reserveblood/all", {
         headers: {
             Accept: "application/json",
             Authorization: "Bearer "+ localStorage.getItem("token"),
@@ -53,8 +53,7 @@ inventory_form.onsubmit = async (e) => {
     }
 }
 
-
-    const inventoryResponse = await fetch(backendURL + "/api/inventory", {
+    const inventoryResponse = await fetch(backendURL + "/api/reserveblood", {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -65,9 +64,9 @@ inventory_form.onsubmit = async (e) => {
 
     const json_inventory = await inventoryResponse.json();
 
-    const id = json_inventory.inventory_id;
+    const id = json_inventory.reserveBlood_id;
 
-    const newAddedStockResponse = await fetch(backendURL + "/api/inventory/" + id, {
+    const newAddedStockResponse = await fetch(backendURL + "/api/reserveblood/" + id, {
         headers: {
             Accept: "application/json",
             Authorization: "Bearer "+ localStorage.getItem("token"),
@@ -77,8 +76,8 @@ inventory_form.onsubmit = async (e) => {
     const newStock = await newAddedStockResponse.json();
 
     formData.append("units_in", newStock.avail_blood_units);
-    formData.append("inventory_id", newStock.inventory_id);
-    formData.append("reserveBlood_id", 0);
+    formData.append("inventory_id", 0);
+    formData.append("reserveBlood_id", newStock.reserveBlood_id);
     formData.append("user_id", newStock.user_id);
 
     const stockInResponse = await fetch(backendURL + "/api/stockIn", {
@@ -92,7 +91,7 @@ inventory_form.onsubmit = async (e) => {
 
     const json_stockIn = await stockInResponse.json();
 
-    if (inventoryResponse.ok ) {
+    if (inventoryResponse.ok && stockInResponse.ok) {
         inventory_form.reset();
         displayToastMessage("create-success");
         await getDatas();
@@ -107,7 +106,7 @@ inventory_form.onsubmit = async (e) => {
 }
 
 generateReportButton.onclick = async () => {
-    const inventoryResponse = await fetch(backendURL + "/api/inventory/all", {
+    const inventoryResponse = await fetch(backendURL + "/api/reserveblood/all", {
         headers: {
             Accept: "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -117,7 +116,7 @@ generateReportButton.onclick = async () => {
     const json_inventory = await inventoryResponse.json();
     if (inventoryResponse.ok) {
         const csvData = jsonToCSV(json_inventory);
-        downloadCSV(csvData, 'inventory_report.csv');
+        downloadCSV(csvData, 'reserve_blood_inventory_report.csv');
   }
 };
   
@@ -149,14 +148,14 @@ async function getDatas(filterComponent = 'All', url = null) {
         </div>
     <!-- loader for Inventory -->`;
 
-    const inventoryResponse = await fetch(url || backendURL + "/api/inventory", {
+    const inventoryResponse = await fetch(url || backendURL + "/api/reserveblood", {
         headers: {
             Accept: "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
         }
     });
 
-    const inventoryResponseAll = await fetch(backendURL + "/api/inventory/all", {
+    const inventoryResponseAll = await fetch(backendURL + "/api/reserveblood/all", {
         headers: {
             Accept: "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -195,8 +194,8 @@ async function getDatas(filterComponent = 'All', url = null) {
                                 class="updateButton me-1"
                                 style="cursor: pointer"
                                 data-bs-toggle="modal"
-                                data-bs-target="#upInventoryModal_${stock.inventory_id}"
-                                data-id="${stock.inventory_id}"
+                                data-bs-target="#upInventoryModal_${stock.reserveBlood_id}"
+                                data-id="${stock.reserveBlood_id}"
                             >
                                 Update
                             </button>
@@ -210,7 +209,7 @@ async function getDatas(filterComponent = 'All', url = null) {
                                     padding-left: 12px !important;
                                     padding-right: 12px !important;
                                     "
-                                    data-id="${stock.inventory_id}"
+                                    data-id="${stock.reserveBlood_id}"
                                 >
                                     <img src="assets/icon/trash.png" alt="" width="15px" />
                                 </button>
@@ -219,7 +218,7 @@ async function getDatas(filterComponent = 'All', url = null) {
                     <!-- Update Inventory Modal -->
                     <div
                         class="modal fade"
-                        id="upInventoryModal_${stock.inventory_id}"
+                        id="upInventoryModal_${stock.reserveBlood_id}"
                         tabindex="-1"
                         aria-labelledby="upInventoryModalLabel"
                         aria-hidden="true"
@@ -234,7 +233,7 @@ async function getDatas(filterComponent = 'All', url = null) {
                                     <span class="font-size"><br /><strong>Rh factor: </strong>${stock.rh_factor}</span><br />
                                     <span class="font-size"><strong>Component: </strong>${stock.component}</span><br />
                                     <span class="font-size"><strong>Current Units: </strong>${stock.avail_blood_units}</span><br />
-                                    <form id="update_units_${stock.inventory_id}">
+                                    <form id="update_units_${stock.reserveBlood_id}">
                                         <div class="form-floating mb-3 mt-3" class="font-size">
                                             <input
                                                 type="number"
@@ -247,7 +246,7 @@ async function getDatas(filterComponent = 'All', url = null) {
                                         </div>
                                         <hr />
                                         <div class="d-flex align-items-end justify-content-end">
-                                            <button type="submit" id="updateButton_${stock.inventory_id}" class="button1 me-2 d-flex justify-content-center align-items-center" style="font-size: 16px">Update</button>
+                                            <button type="submit" id="updateButton_${stock.reserveBlood_id}" class="button1 me-2 d-flex justify-content-center align-items-center" style="font-size: 16px">Update</button>
                                             <button type="button" class="buttonBack" data-bs-dismiss="modal" style="font-size: 16px">Cancel</button>
                                         </div>
                                     </form>
@@ -364,7 +363,7 @@ async function updateQuantity(id) {
 
         const formData = new FormData(update_form);
 
-        const prevResponse = await fetch(backendURL + "/api/inventory/" + id, {
+        const prevResponse = await fetch(backendURL + "/api/reserveblood/" + id, {
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + localStorage.getItem("token"),
@@ -377,7 +376,7 @@ async function updateQuantity(id) {
         formData.append("_method", "PUT");
         update_form.querySelector("button[type='submit']").disabled = true;
 
-        const inventoryResponse = await fetch(backendURL + "/api/inventory/bloodunits/" + id, {
+        const inventoryResponse = await fetch(backendURL + "/api/reserveblood/bloodunits/" + id, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -393,8 +392,8 @@ async function updateQuantity(id) {
             stockData.append("blood_type", prevData.blood_type);
             stockData.append("rh_factor", prevData.rh_factor);
             stockData.append("component", prevData.component);
-            stockData.append("inventory_id", prevData.inventory_id);
-            stockData.append("reserveBlood_id", 0);
+            stockData.append("inventory_id", 0);
+            stockData.append("reserveBlood_id", prevData.reserveBlood_id);
             stockData.append("user_id", prevData.user_id);
 
             if (newUnits > prevUnits) {
@@ -422,7 +421,6 @@ async function updateQuantity(id) {
             document.querySelector(`#upInventoryModal_${id} .buttonBack`).click();
             await getDatas();
             await getStocks();
-            
         } else {
             displayToastMessage("update-fail");
             console.error("Update failed:", json_inventory.message);
@@ -440,7 +438,7 @@ function updateClick(e) {
 
 async function deleteInventory(id) {
     if (confirm("Are you sure you want to delete this inventory item? related stocks update will be deleted as well in the history.")) {
-        const inventoryResponse = await fetch(backendURL + "/api/inventory/" + id, {
+        const inventoryResponse = await fetch(backendURL + "/api/reserveblood/" + id, {
             method: "DELETE",
             headers: {
                 Accept: "application/json",
@@ -505,7 +503,7 @@ async function getStocks() {
 
         combinedData.forEach(stocks => {
             if(profileData.id == stocks.user_id || profileData.user_id == stocks.user_id){
-                if(stocks.inventory_id !== 0){
+                if(stocks.reserveBlood_id !== 0){
             hasStock = true;
             stock += `<div
                   class="py-2 px-3 mb-2 ${stocks.units_in ? "bg-success" : "bg-danger"} rounded-3 text-white"
@@ -516,7 +514,7 @@ async function getStocks() {
                   <small class="d-flex justify-content-end">${formatDateDifference(stocks.created_at)}</small>
                 </div>`; 
             }
-          }
+         }
         });
 
         if(!hasStock){

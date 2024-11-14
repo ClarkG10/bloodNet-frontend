@@ -46,6 +46,7 @@ function setRouter() {
         case "/inventory.html":
         case "/user.html":
         case "/profile.html":
+        case "/reserveBlood.html":
             if (token === null) {
                 window.location.pathname = "/index.html";
             }

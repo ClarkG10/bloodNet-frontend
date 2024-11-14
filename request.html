@@ -41,6 +41,14 @@
             </a>
           </div>
           <div>
+            <a href="reserveBlood.html" class="nav-link d-flex opacity">
+              <div class="ms-4 p-2">
+                <img src="assets/icon/b-inventory.png" alt="" width="18px" />
+              </div>
+              <span class="padding">Reserve Blood</span>
+            </a>
+          </div>
+          <div>
             <a href="event.html" class="nav-link d-flex opacity">
               <div class="ms-4 p-2">
                 <img src="assets/icon/b-event.png" alt="" width="18px" />
@@ -49,11 +57,19 @@
             </a>
           </div>
           <div>
-            <a href="request.html" class="nav-link d-flex focus">
+            <a
+              href="request.html"
+              class="nav-link d-flex position-relative focus"
+            >
               <div class="ms-4 p-2">
-                <img src="assets/icon/w-request.png" alt="" width="18px" />
+                <img
+                  src="assets/icon/w-request.png"
+                  alt="Request Icon"
+                  width="18px"
+                />
+                <span id="getTotalPendingRequest"></span>
+                <span class="ms-2">Requests</span>
               </div>
-              <span class="padding">Requests</span>
             </a>
           </div>
           <div id="hideLink">
@@ -80,7 +96,7 @@
               <span class="padding">Profile</span>
             </a>
           </div>
-          <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+          <br /><br /><br /><br /><br /><br /><br /><br /><br />
           <!-- logout -->
           <div class="logout">
             <span
@@ -184,12 +200,12 @@
               <div class="has-body">Urgency Scale</div>
               <div class="has-body">Action</div>
             </div>
-            <div
-              class="mt-1"
-              style="overflow-x: hidden; overflow-y: auto; max-height: 400px"
-            >
+            <div class="mt-1">
               <!-- For Request -->
-              <div id="get_request"></div>
+              <div
+                id="get_request"
+                style="min-height: 400px; max-height: 680px; overflow-y: scroll"
+              ></div>
               <!-- For Request -->
             </div>
             <div

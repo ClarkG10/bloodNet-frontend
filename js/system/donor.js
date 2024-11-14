@@ -1,7 +1,8 @@
-import { backendURL, jsonToCSV, userlogged, logout, displayToastMessage } from "../utils/utils.js";
+import { backendURL, jsonToCSV, userlogged, logout, displayToastMessage, getPendingRequest } from "../utils/utils.js";
 
 userlogged();
 logout();
+getPendingRequest();
 
 const get_donor = document.getElementById("get_donors");
 const generateReportButton = document.getElementById("generateDonorReport");

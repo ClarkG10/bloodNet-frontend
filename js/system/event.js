@@ -1,7 +1,8 @@
-import { backendURL, logout, userlogged, jsonToCSV, displayToastMessage} from "../utils/utils.js";
+import { backendURL, logout, userlogged, jsonToCSV, displayToastMessage, getPendingRequest} from "../utils/utils.js";
 
 userlogged();
 logout();
+getPendingRequest();
 
 const event_form = document.getElementById("event_form");
 const generateReportButton = document.getElementById("generateEventReport");

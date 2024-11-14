@@ -1,8 +1,9 @@
-import { backendURL, logout, userlogged, displayToastMessage, setRoleAndPermission} from "../utils/utils.js";
+import { backendURL, logout, userlogged, displayToastMessage, setRoleAndPermission, getPendingRequest} from "../utils/utils.js";
 
 setRoleAndPermission();
 userlogged();
 logout();
+getPendingRequest();
 
 const createUser_form = document.getElementById("createUser_form");
 

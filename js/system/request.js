@@ -1,7 +1,8 @@
-import { backendURL, logout, jsonToCSV, formatTimeDifference, hasThreeMinutesPassed, displayToastMessage } from "../utils/utils.js";
+import { backendURL, logout, jsonToCSV, formatTimeDifference, hasThreeMinutesPassed, displayToastMessage, getPendingRequest } from "../utils/utils.js";
 
 logout();
 getDatas();
+getPendingRequest();  
 
 
 if (localStorage.getItem("type") === "Blood Center"){
@@ -87,8 +88,6 @@ async function getDatas(filteredUrgencyScale = "All", url = "", keyword = "") {
     const json_organization = await organizationResponse.json();
     const json_organizationAll = await organizationAll.json();
     const json_profile = await profileResponse.json();
-
-    console.log(json_request)
 
     const organizations = Array.isArray(json_organization) ? json_organization : json_organization.data; 
 
@@ -359,6 +358,7 @@ async function updateRequestStatus(id, status) {
               displayToastMessage("update-success");
               document.querySelector(`#upStatusRequestModal_${id} .btn-close`).click();
               await getDatas();
+              getPendingRequest();
           } else {
               displayToastMessage("update-fail");
               console.error("Undo action failed:", undoJson.message);
@@ -387,8 +387,9 @@ async function updateRequestStatus(id, status) {
 
           if (requestResponse.ok) {
               displayToastMessage("update-success");
-              document.querySelector(`#upStatusRequestModal_${id} .btn-close`).click();
+              document.querySelector(`#upStatusRequestModal_${id} .btn-close`).click();   
               await getDatas();
+              getPendingRequest();
           } else {
               displayToastMessage("update-fail");
               console.error("Update status failed:", json_request.message);

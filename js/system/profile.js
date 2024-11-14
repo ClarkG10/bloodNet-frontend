@@ -1,8 +1,9 @@
-import { backendURL, logout, displayToastMessage, setRoleAndPermission} from "../utils/utils.js";
+import { backendURL, logout, displayToastMessage, setRoleAndPermission, getPendingRequest} from "../utils/utils.js";
 
 setRoleAndPermission();
 getDatas();
 logout();
+getPendingRequest(); 
 
 async function getDatas() {
     const org = document.getElementById("orgProfile");

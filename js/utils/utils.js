@@ -205,30 +205,19 @@ function hasThreeMinutesPassed(createdAt) {
   
 
 async function setRoleAndPermission() {
-    const nav_loader = document.getElementById("nav_loader");
-    const navLinks = document.querySelectorAll('.nav-link');
-    const originalContent = [];
-    const elementsState = [];
+    // const navLinks = document.querySelectorAll('.nav-link');
+    // const originalContent = [];
+    // const elementsState = [];
     
-    nav_loader.innerHTML = `<div class="placeholder-glow" style="height: 100%; display: flex; align-items: center; justify-content: center;>
-            <div class="ms-4 p-2 "></div>
-            <span class="padding invisible">Loading...</span>
-        </div>`;
-
-    navLinks.forEach((link, index) => {
-        originalContent[index] = link.innerHTML;
-        link.classList.add('disabled');
-        link.innerHTML = `
-        <div class="placeholder-glow" style="height: 100%; display: flex; align-items: center; justify-content: center;">
-            <div class="ms-4 p-2"></div>
-            <span class="padding invisible">Loading...</span>
-        </div>`;
+    // navLinks.forEach((link, index) => {
+    //     originalContent[index] = link.innerHTML;
+    //     link.classList.add('disabled');
         
-        elementsState[index] = {
-            hasFocus: link.classList.contains('focus')
-        };
-        link.classList.remove('focus');
-    });
+    //     elementsState[index] = {
+    //         hasFocus: link.classList.contains('focus')
+    //     };
+    //     link.classList.remove('focus');
+    // });
 
         const organizationResponse = await fetch(backendURL + "/api/mobile/organization", {
             headers: {
@@ -253,13 +242,11 @@ async function setRoleAndPermission() {
                             let links = document.querySelectorAll(".HospitalLink");
                             links.forEach(link => {
                                 link.classList.remove('d-none')
-                                link.classList.add('d-block');
                             });
                         } else {
                             let links = document.querySelectorAll(".BCLink");
                             links.forEach(link => {
                                 link.classList.remove('d-none')
-                                link.classList.add('d-block');
                             });
                         }
                         break;
@@ -267,14 +254,13 @@ async function setRoleAndPermission() {
                 }
             }
 
-        navLinks.forEach((link, index) => {
-            nav_loader.innerHTML = '';
-            link.innerHTML = originalContent[index];
-            if (elementsState[index].hasFocus) {
-                link.classList.add('focus');
-            }
-            link.classList.remove('disabled');
-        });
+        // navLinks.forEach((link, index) => {
+        //     link.innerHTML = originalContent[index];
+        //     if (elementsState[index].hasFocus) {
+        //         link.classList.add('focus');
+        //     }
+        //     link.classList.remove('disabled');
+        // });
 }
 
 function displayToastMessage(type) {
@@ -342,9 +328,27 @@ function displayToastMessage(type) {
     });
 }
 
+async function getPendingRequest() {
+    const getTotalPendingRequest = document.getElementById("getTotalPendingRequest");
 
+    const requestResponse = await fetch(backendURL + "/api/bloodrequest/all", {
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+    
+    const json_request = await requestResponse.json();
 
+    let pendingRequest = 0;
+    json_request.forEach((request) =>{
+      if(request.status === "Pending"){
+        pendingRequest++;
+      }
+    })
 
+    getTotalPendingRequest.innerHTML = `<span class="position-absolute top-50 translate-middle badge bg-danger" style="right: 0px">
+                  <span>${pendingRequest}</span><span class="visually-hidden">unread messages</span></span>`;
+}
 
-
-export { backendURL, logout, userlogged, checkOrgInfoStatus, jsonToCSV, setRoleAndPermission, formatTimeDifference, hasThreeMinutesPassed, formatDateDifference, displayToastMessage} 
+export { backendURL, logout, userlogged, checkOrgInfoStatus, jsonToCSV, setRoleAndPermission, formatTimeDifference, hasThreeMinutesPassed, formatDateDifference, displayToastMessage, getPendingRequest} 

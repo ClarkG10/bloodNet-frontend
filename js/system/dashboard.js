@@ -1,7 +1,8 @@
-import { backendURL, logout, formatTimeDifference, displayToastMessage} from "../utils/utils.js";
+import { backendURL, logout, formatTimeDifference, displayToastMessage, getPendingRequest} from "../utils/utils.js";
 
 logout();
 getDatas();
+getPendingRequest();
 
 async function getDatas() {
   
