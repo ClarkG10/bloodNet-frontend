@@ -4,56 +4,54 @@ setRoleAndPermission();
 getDatas();
 logout();
 getPendingRequest(); 
+const org = document.getElementById("orgProfile");
+    
+const placeholders = `
+    <div class="placeholder-glow mt-2" role="status">
+        <span class="placeholder rounded-3">Loading...</span>
+    </div>`;
+
+org.innerHTML = `
+    <div class="placeholder-glow">
+        <img class="border rounded-3 placeholder" width="120px" height="120px" />
+    </div>
+    <div class="position-absolute" style="top: 75px; left: 155px">
+        <span class="fw-bold fs-5">${placeholders}</span><br />
+    </div>
+    <div>
+        <h6 class="fw-bold mt-4">Organization Type</h6>
+        <span>${placeholders}</span>
+        <h6 class="fw-bold mt-3">Description</h6>
+        <span>${placeholders}</span>
+        <div class="flex-grow-1">
+            <h6 class="fw-bold mt-3">Address</h6>
+            <span>${placeholders}</span>
+        </div>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <h6 class="fw-bold mt-3">Country</h6>
+                <span>${placeholders}</span>
+            </div>
+            <div class="flex-grow-1">
+                <h6 class="fw-bold mt-3">City</h6>
+                <span>${placeholders}</span>
+            </div>
+            <div class="flex-grow-1">
+                <h6 class="fw-bold mt-3">Zipcode</h6>
+                <span>${placeholders}</span>
+            </div>
+        </div>
+        <div class="flex-grow-1">
+            <h6 class="fw-bold mt-3">Operating Hours</h6>
+            <span>${placeholders}</span>
+        </div>
+        <div class="flex-grow-1">
+            <h6 class="fw-bold mt-3">Contact Information</h6>
+            <span>${placeholders}</span>
+        </div>
+    </div>`;
 
 async function getDatas() {
-    const org = document.getElementById("orgProfile");
-    const placeholders = `
-        <div class="placeholder-glow mt-2" role="status">
-            <span class="placeholder rounded-3">Loading...</span>
-        </div>`;
-
-    org.innerHTML = `
-        <div class="placeholder-glow">
-            <img class="border rounded-3 placeholder" width="120px" height="120px" />
-        </div>
-        <div class="position-absolute" style="top: 75px; left: 155px">
-            <span class="fw-bold fs-5">${placeholders}</span><br />
-        </div>
-        <div>
-            <h6 class="fw-bold mt-4">Organization Type</h6>
-            <span>${placeholders}</span>
-            <h6 class="fw-bold mt-3">Description</h6>
-            <span>${placeholders}</span>
-            <div class="flex-grow-1">
-                <h6 class="fw-bold mt-3">Address</h6>
-                <span>${placeholders}</span>
-            </div>
-            <div class="d-flex">
-                <div class="flex-grow-1">
-                    <h6 class="fw-bold mt-3">Country</h6>
-                    <span>${placeholders}</span>
-                </div>
-                <div class="flex-grow-1">
-                    <h6 class="fw-bold mt-3">City</h6>
-                    <span>${placeholders}</span>
-                </div>
-                <div class="flex-grow-1">
-                    <h6 class="fw-bold mt-3">Zipcode</h6>
-                    <span>${placeholders}</span>
-                </div>
-            </div>
-            <div class="flex-grow-1">
-                <h6 class="fw-bold mt-3">Operating Hours</h6>
-                <span>${placeholders}</span>
-            </div>
-            <div class="flex-grow-1">
-                <h6 class="fw-bold mt-3">Contact Information</h6>
-                <span>${placeholders}</span>
-            </div>
-        </div>`;
-
-   
-
         const [organizationResponse, profileResponse] = await Promise.all([
             fetch(backendURL + "/api/mobile/organization", {
                 headers: {

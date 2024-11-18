@@ -2,24 +2,23 @@ import { backendURL, formatTimeDifference, logout, hasThreeMinutesPassed } from 
 
 getDatas();
 logout();
+const placeholders = `
+<div class="placeholder-glow mt-2" role="status">
+    <span class="placeholder rounded-3">Loading...</span>
+</div>`;
+
+const elements = [
+"getTotalUnits",
+"getTotalRequests",
+"barChartLoader",        
+"get_requests",
+"lowStock",
+"lineChartLoader",
+].map(id => document.getElementById(id));
+
+elements.forEach(element => element.innerHTML = placeholders);
 
 async function getDatas() {
-    const placeholders = `
-        <div class="placeholder-glow mt-2" role="status">
-            <span class="placeholder rounded-3">Loading...</span>
-        </div>`;
-        
-    const elements = [
-        "getTotalUnits",
-        "getTotalRequests",
-        "barChartLoader",        
-        "get_requests",
-        "lowStock",
-        "lineChartLoader",
-    ].map(id => document.getElementById(id));
-
-    elements.forEach(element => element.innerHTML = placeholders);
-
     const [
         organizationResponse, 
         inventoryResponse, 

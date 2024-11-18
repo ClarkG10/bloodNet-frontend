@@ -151,29 +151,20 @@
                 List of Donors</span
               >
               <button
+                id="generateDonorReport"
+                class="generateReport bg-secondary"
+                style="right: 170px"
+              >
+                Generate Report
+              </button>
+              <button
                 class="createEventButton bloodCompatibilityChecker"
-                style="right: 50px; bottom: 508px; background-color: #b43929"
+                style="right: 50px; background-color: #b43929"
                 type="button"
                 data-bs-toggle="modal"
                 data-bs-target="#createDonorModal"
               >
                 Create Donor
-              </button>
-              <button
-                type="button"
-                class="bloodCompatibilityChecker"
-                style="right: 170px; bottom: 508px; background-color: #b43929"
-                data-bs-toggle="modal"
-                data-bs-target="#CompatibilityCheckerModal"
-              >
-                Blood Compatibility Checker
-              </button>
-              <button
-                id="generateDonorReport"
-                class="generateReport bg-secondary"
-                style="right: 387px; bottom: 508px"
-              >
-                Generate Report
               </button>
             </div>
             <div
@@ -405,157 +396,5 @@
         </div>
       </div>
     </div>
-
-    <div
-      class="modal fade"
-      id="CompatibilityCheckerModal"
-      tabindex="-1"
-      aria-labelledby="CompatibilityCheckerModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div id="CompatibilityCheckerModalLabel">
-              <span class="fw-bold fs-5">Blood Compatibility Checker</span>
-              <br />
-            </div>
-            <button
-              type="button"
-              id="popoverButton"
-              style="
-                padding: 3px 7px 3px 7px;
-                background-color: #b43929;
-                border: 2px solid white !important;
-                border-radius: 50%;
-              "
-              data-bs-toggle="popover"
-              data-bs-html="true"
-              data-bs-content="
-              <strong>O Positive:</strong><br>
-              Can give to: O+, A+, B+, AB+<br>
-              Can receive from: O+, O-<br><br>
-              <strong>A Positive:</strong><br>
-              Can give to: A+, AB+<br>
-              Can receive from: A+, A-, O+, O-<br><br>
-              <strong>B Positive:</strong><br>
-              Can give to: B+, AB+<br>
-              Can receive from: B+, B-, O+, O-<br><br>
-              <strong>AB Positive:</strong><br>
-              Can give to: AB+ only<br>
-              Can receive from: All blood types<br><br>
-              <strong>O Negative:</strong><br>
-              Can give to: All blood types<br>
-              Can receive from: O-<br><br>
-              <strong>A Negative:</strong><br>
-              Can give to: A-, A+, AB-, AB+<br>
-              Can receive from: A-, O-<br><br>
-              <strong>B Negative:</strong><br>
-              Can give to: B-, B+, AB-, AB+<br>
-              Can receive from: B-, O-<br><br>
-              <strong>AB Negative:</strong><br>
-              Can give to: AB-, AB+<br>
-              Can receive from: AB-, A-, B-, O-
-              "
-              title="Blood Type Compatibility"
-            >
-              <img
-                src="assets/icon/question-sign (1).png"
-                alt=""
-                width="15px"
-                height="15px"
-              />
-            </button>
-          </div>
-          <div class="modal-body px-4">
-            <form id="blood_compatibility_form">
-              <div class="d-flex">
-                <div
-                  class="form-floating mb-3 flex-grow-1 me-2"
-                  style="width: fit-content"
-                >
-                  <select class="form-select" id="blood_type" name="blood_type">
-                    <option value="O-">O-</option>
-                    <option value="O+">O+</option>
-                    <option value="A-">A-</option>
-                    <option value="A+">A+</option>
-                    <option value="B-">B-</option>
-                    <option value="B+">B+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="AB+">AB+</option>
-                  </select>
-                  <label for="blood_type">Blood Type (Recipient)</label>
-                </div>
-                <div>
-                  <button
-                    type="submit"
-                    class="btn p-3 bg-secondary"
-                    style="color: white"
-                  >
-                    Search
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            <div class="p-3 rounded-3">
-              <div class="d-flex">
-                <span class="fw-bold font-size d-flex ms-2 mb-2">
-                  Available stocks</span
-                >
-              </div>
-              <div
-                class="d-flex shadow-sm mt-2 bg-secondary"
-                style="font-weight: bold; color: white; border-radius: 10px"
-              >
-                <div class="has-body flex-grow-1">Blood type</div>
-                <div class="has-body flex-grow-1">Component</div>
-                <div class="has-body flex-grow-1">Units</div>
-              </div>
-              <div id="inventory"></div>
-            </div>
-            <div class="p-3 mt-3 rounded-3">
-              <div class="d-flex">
-                <span class="fw-bold font-size d-flex ms-2 mb-2">
-                  Compatible Donors</span
-                >
-              </div>
-              <div
-                class="d-flex shadow-sm mt-2 bg-secondary"
-                style="font-weight: bold; color: white; border-radius: 10px"
-              >
-                <div class="has-body flex-grow-1">Name</div>
-                <div class="has-body flex-grow-1">Blood type</div>
-                <div class="has-body flex-grow-1">Address</div>
-                <div class="has-body flex-grow-1">Phone number</div>
-                <div class="has-body flex-grow-1">status</div>
-              </div>
-              <div id="donors"></div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <div class="d-flex justify-content-end">
-              <button
-                type="button"
-                class="buttonBack modal_close"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var popoverTriggerList = [].slice.call(
-          document.querySelectorAll('[data-bs-toggle="popover"]')
-        );
-        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-          return new bootstrap.Popover(popoverTriggerEl);
-        });
-      });
-    </script>
   </body>
 </html>

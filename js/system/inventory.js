@@ -17,32 +17,23 @@ inventory_form.onsubmit = async (e) => {
 
     const formData = new FormData(inventory_form);
 
-    const getInventoryResponse = await fetch(backendURL + "/api/mobile/inventory", {
+    const getInventoryResponse = await fetch(backendURL + "/api/inventory/all", {
         headers: {
             Accept: "application/json",
             Authorization: "Bearer "+ localStorage.getItem("token"),
         },
     });
 
-    const profileResponse = await fetch(backendURL + "/api/profile/show", {
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer "+ localStorage.getItem("token"),
-        },
-    });
-
-    const json_profile = await profileResponse.json();
     const json_inventoryAll = await getInventoryResponse.json();
 
     for(let i = 0; i < json_inventoryAll.length; i++) {
-    if(json_profile.id === json_inventoryAll[i].user_id || json_profile.user_id === json_inventoryAll[i].user_id){
         // concat old inventory
-        let blood_type = json_inventoryAll[i].blood_type.concat(json_inventoryAll[i].rh_factor);
-        let bloodTypeWithComponent = blood_type.concat(json_inventoryAll[i].component);
+        let blood_type = json_inventoryAll[i].blood_type + json_inventoryAll[i].rh_factor;
+        let bloodTypeWithComponent = blood_type + json_inventoryAll[i].component;
 
         // concat new added inventory
-        let new_blood_type = formData.get("blood_type").concat(formData.get("rh_factor"));
-        let new_bloodTypeWithComponent = new_blood_type.concat(formData.get("component"));
+        let new_blood_type = formData.get("blood_type")+ formData.get("rh_factor");
+        let new_bloodTypeWithComponent = new_blood_type + formData.get("component");
         
         if(bloodTypeWithComponent === new_bloodTypeWithComponent) {
             alert("This blood type already exists in your inventory.");
@@ -50,7 +41,6 @@ inventory_form.onsubmit = async (e) => {
             addButton.innerHTML = "Add";
             return;
         }
-    }
 }
 
 
@@ -138,16 +128,17 @@ document.getElementById('sortComponent').addEventListener('change', function() {
     getDatas(this.value);
 });
 
-async function getDatas(filterComponent = 'All', url = null) {
-    const blood_stocks = document.getElementById("blood_stocks");
-    const alert = document.getElementById("alerts");
+const blood_stocks = document.getElementById("blood_stocks");
 
-    blood_stocks.innerHTML = `
-    <!-- loader for Inventory -->
-  <div class="d-flex inventory-head shadow-sm">
-          ${'<div class="inventory-body"><span class="spinner-border" role="status"></span></div>'.repeat(5)}
-        </div>
-    <!-- loader for Inventory -->`;
+blood_stocks.innerHTML = `
+<!-- loader for Inventory -->
+<div class="d-flex inventory-head shadow-sm">
+      ${'<div class="inventory-body"><span class="spinner-border" role="status"></span></div>'.repeat(5)}
+    </div>
+<!-- loader for Inventory -->`;
+
+async function getDatas(filterComponent = 'All', url = "") {
+    const alert = document.getElementById("alerts");
 
     const inventoryResponse = await fetch(url || backendURL + "/api/inventory", {
         headers: {
@@ -240,10 +231,18 @@ async function getDatas(filterComponent = 'All', url = null) {
                                                 type="number"
                                                 class="form-control"
                                                 placeholder="Units"
-                                                value="${stock.avail_blood_units}"
-                                                name="avail_blood_units"
+                                                name="subtracted_units"
                                             />
-                                            <label for="avail_blood_units" style="font-size: 16px">Update units</label>
+                                            <label for="avail_blood_units" style="font-size: 16px">Subtract units (-)</label>
+                                        </div>
+                                        <div class="form-floating mb-3 mt-3" class="font-size">
+                                            <input
+                                                type="number"
+                                                class="form-control"
+                                                placeholder="Units"
+                                                name="added_units"
+                                            />
+                                            <label for="avail_blood_units" style="font-size: 16px">Add units (+)</label>
                                         </div>
                                         <hr />
                                         <div class="d-flex align-items-end justify-content-end">
@@ -358,77 +357,99 @@ async function updateQuantity(id) {
     update_form.onsubmit = async (e) => {
         e.preventDefault();
 
-    const updateButton = document.querySelector("#updateButton_" + id);
-    updateButton.disabled = true;
-    updateButton.innerHTML = `<div class="spinner-border" role="status"></div>`;
+        const updateButton = document.querySelector("#updateButton_" + id);
+        updateButton.disabled = true;
+        updateButton.innerHTML = `<div class="spinner-border" role="status"></div>`;
 
         const formData = new FormData(update_form);
 
-        const prevResponse = await fetch(backendURL + "/api/inventory/" + id, {
-            headers: {
-                Accept: "application/json",
-                Authorization: "Bearer " + localStorage.getItem("token"),
+        try {
+            const prevResponse = await fetch(backendURL + "/api/inventory/" + id, {
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                }
+            });
+            const prevData = await prevResponse.json();
+
+            if (!prevResponse.ok) {
+                throw new Error(prevData.message || "Failed to fetch previous data");
             }
-        });
-        const prevData = await prevResponse.json();
-        const prevUnits = parseInt(prevData.avail_blood_units);
-        const newUnits = parseInt(formData.get("avail_blood_units"));
 
-        formData.append("_method", "PUT");
-        update_form.querySelector("button[type='submit']").disabled = true;
+            const prevUnits = parseInt(prevData.avail_blood_units);
+            let newUnits = prevUnits; 
 
-        const inventoryResponse = await fetch(backendURL + "/api/inventory/bloodunits/" + id, {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-            body: formData,
-        });
+            formData.append("_method", "PUT");
+            update_form.querySelector("button[type='submit']").disabled = true;
 
-        const json_inventory = await inventoryResponse.json();
-
-        if (inventoryResponse.ok) {
-            const stockData = new FormData();
-            stockData.append("blood_type", prevData.blood_type);
-            stockData.append("rh_factor", prevData.rh_factor);
-            stockData.append("component", prevData.component);
-            stockData.append("inventory_id", prevData.inventory_id);
-            stockData.append("reserveBlood_id", 0);
-            stockData.append("user_id", prevData.user_id);
-
-            if (newUnits > prevUnits) {
-                stockData.append("units_in", newUnits - prevUnits);
-                await fetch(backendURL + "/api/stockIn", {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: "Bearer " + localStorage.getItem("token"),
-                    },
-                    body: stockData,
-                });
-            } else if (newUnits < prevUnits) {
-                stockData.append("units_out", prevUnits - newUnits);
-                await fetch(backendURL + "/api/stockOut", {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: "Bearer " + localStorage.getItem("token"),
-                    },
-                    body: stockData,
-                });
+            // Calculate new available units
+            if (formData.get("added_units") !== null && formData.get("added_units") !== "") {
+                newUnits = prevUnits + parseInt(formData.get("added_units"), 10);
+                formData.set("avail_blood_units", newUnits);
+            } else if (formData.get("subtracted_units") !== null && formData.get("subtracted_units") !== "") {
+                if(prevUnits > parseInt(formData.get("subtracted_units"))){
+                newUnits = prevUnits - parseInt(formData.get("subtracted_units"), 10);
+                formData.set("avail_blood_units", newUnits);
             }
-            displayToastMessage("update-success");
-            document.querySelector(`#upInventoryModal_${id} .buttonBack`).click();
-            await getDatas();
-            await getStocks();
-            
-        } else {
+            }
+
+            // Update inventory
+            const inventoryResponse = await fetch(backendURL+ "/api/inventory/bloodunits/" + id, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                },
+                body: formData,
+            });
+
+            const json_inventory = await inventoryResponse.json();
+
+            if (inventoryResponse.ok) {
+                const stockData = new FormData();
+                stockData.append("blood_type", prevData.blood_type);
+                stockData.append("rh_factor", prevData.rh_factor);
+                stockData.append("component", prevData.component);
+                stockData.append("inventory_id", prevData.inventory_id);
+                stockData.append("reserveBlood_id", 0);
+                stockData.append("user_id", prevData.user_id);
+
+                if (newUnits > prevUnits) {
+                    stockData.append("units_in", formData.get("added_units"));
+                    await fetch(backendURL +"/api/stockIn", {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            Authorization: "Bearer " + localStorage.getItem("token"),
+                        },
+                        body: stockData,
+                    });
+                } else if (newUnits < prevUnits) {
+                    stockData.append("units_out", formData.get("subtracted_units"));
+                    await fetch(backendURL +"/api/stockOut", {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            Authorization: "Bearer " + localStorage.getItem("token"),
+                        },
+                        body: stockData,
+                    });
+                }
+                displayToastMessage("update-success");
+                document.querySelector(`#upInventoryModal_${id} .buttonBack`).click();
+                await getDatas();
+                await getStocks();
+            } else {
+                displayToastMessage("update-fail");
+                console.error("Update failed:", json_inventory.message);
+            }
+        } catch (error) {
             displayToastMessage("update-fail");
-            console.error("Update failed:", json_inventory.message);
+            console.error("Error:", error);
+        } finally {
+            updateButton.disabled = false;
+            updateButton.innerHTML = `Update`;
         }
-        updateButton.disabled = false;
-        updateButton.innerHTML = `Update`;
     }
 }
 
@@ -525,3 +546,106 @@ async function getStocks() {
         stocksHistory.innerHTML = stock;
     }
 }
+
+const blood_compatibility_form = document.getElementById("blood_compatibility_form");
+const getInventory = document.getElementById("inventory"); 
+const getDonor = document.getElementById("donors");
+
+    getInventory.innerHTML = `<div class="d-flex mt-1">
+        <div class="no-body flex-grow-1 my-2">Search for available stocks</div></div>`
+
+    getDonor.innerHTML = `<div class="d-flex mt-1" >
+        <div class="no-body flex-grow-1 my-2">Search for compatible donors</div></div>`
+
+
+blood_compatibility_form.onsubmit = async (e) => {
+    e.preventDefault();
+
+    const placeholder = `<div class="d-flex shadow-sm">
+          <div class="no-body flex-grow-1 my-2"><span class="spinner-border" role="status"></span></div></div>`
+
+    getInventory.innerHTML = placeholder;
+    getDonor.innerHTML = placeholder;
+
+    const formData = new FormData(blood_compatibility_form); 
+    const recipient_blood = formData.get("blood_type");
+
+    const inventoryResponse = await fetch(backendURL + "/api/inventory/all", {
+        headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+    });
+
+    const donorResponse = await fetch(backendURL + "/api/donor/all", {
+        headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+    });
+
+    const json_inventory = await inventoryResponse.json();
+    const json_donor = await donorResponse.json();
+
+    if (inventoryResponse.ok && donorResponse.ok) {
+        let stocks = "";
+        let donors = "";
+        let hasStocks = false;
+        let hasDonor = false;
+
+        const isCompatible = (donor_blood, recipient_blood) => {
+            const compatibilityChart = {
+                "O-": ["O-"],
+                "O+": ["O-", "O+"],
+                "A-": ["A-", "O-"],
+                "A+": ["A+", "A-", "O-", "O+"],
+                "B-": ["B-", "O-"],
+                "B+": ["B+", "B-",  "O-", "O+"],
+                "AB-": ["AB-", "B-", "O-", "A-"],
+                "AB+": ["AB+", "AB-", "A-","A+","B+","B-","O-","O+",]
+            };
+            return compatibilityChart[recipient_blood].includes(donor_blood);
+        };
+
+        json_inventory.forEach(stock => { 
+            let blood_type = stock.blood_type + stock.rh_factor;
+            if (isCompatible(blood_type, recipient_blood)) {
+                hasStocks = true;
+                stocks += `<div class="d-flex mt-1 shadow-sm">
+                              <div class="has-body flex-grow-1">${blood_type}</div>
+                              <div class="has-body flex-grow-1">${stock.component}</div>
+                              <div class="has-body flex-grow-1">${stock.avail_blood_units}</div>
+                           </div>`;
+            }
+        });
+
+        if(!hasStocks){
+            stocks = `<div class="d-flex mt-1">
+          <div class="no-body flex-grow-1 my-2">No Available Stocks</div></div>`
+        }
+
+        getInventory.innerHTML = stocks;
+
+        if(localStorage.getItem("type") === "Blood Center") {
+        json_donor.forEach(donor => {
+            if (isCompatible(donor.blood_type, recipient_blood)) {
+                hasDonor = true;
+                donors += `<div class="d-flex mt-1 shadow-sm">
+                              <div class="has-body flex-grow-1">${donor.fullname}</div>
+                              <div class="has-body flex-grow-1">${donor.blood_type}</div>
+                              <div class="has-body flex-grow-1">${donor.address}</div>
+                              <div class="has-body flex-grow-1">${donor.phonenumber}</div>
+                              <div class="has-body flex-grow-1"><span class="bg-secondary-subtle py-2 px-4 rounded-4 ${donor.status === "Active" ? "text-success" : "text-danger"}" >${donor.status}</span></div>
+                           </div>`;
+            }
+        });
+   
+        if(!hasDonor){
+            donors = `<div class="d-flex mt-1">
+          <div class="no-body flex-grow-1 my-2">No Compatible Donor</div></div>`
+        }
+        getDonor.innerHTML = donors;
+    }
+}
+};
+

@@ -4,25 +4,27 @@ logout();
 getDatas();
 getPendingRequest();
 
+const placeholders = `
+<div class="placeholder-glow mt-2" role="status">
+    <span class="placeholder rounded-3">Loading...</span>
+</div>`;
+
+const elements = [
+"getTotalUnits",
+"getTotalEvents",
+"getTotalRequests",
+"getTotalDonors",
+"get_events",
+"lowStock",
+"get_requests",
+"get_donors"
+].map(id => document.getElementById(id));
+
+elements.forEach(element => element.innerHTML = placeholders);
+
 async function getDatas() {
   
-    const placeholders = `
-        <div class="placeholder-glow mt-2" role="status">
-            <span class="placeholder rounded-3">Loading...</span>
-        </div>`;
-        
-    const elements = [
-        "getTotalUnits",
-        "getTotalEvents",
-        "getTotalRequests",
-        "getTotalDonors",
-        "get_events",
-        "lowStock",
-        "get_requests",
-        "get_donors"
-    ].map(id => document.getElementById(id));
-    
-    elements.forEach(element => element.innerHTML = placeholders);
+
 
         const [organizationResponse, inventoryResponse, donorResponse, eventResponse, requestResponse, profileResponse] = await Promise.all([
             fetchData("/api/mobile/organization"),
@@ -408,7 +410,7 @@ function createDonorHTML(donor) {
           <div class="has-body">${donor.blood_type.toUpperCase()}</div>
           <div class="has-body" style="overflow: hidden !important">${donor.address}</div>
           <div class="has-body">${donor.phonenumber}</div>
-          <div class="has-body">${donor.email}</div>
+          <div class="has-body">${donor.email_address}</div>
            <div class="has-body">
                         <span class="bg-secondary-subtle py-1 px-3 rounded-4 ${donor.status === "Active" ? "text-success" : "text-danger"}">${donor.status}</span>
                       </div>

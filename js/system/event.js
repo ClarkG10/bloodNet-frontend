@@ -71,13 +71,13 @@ document.getElementById('sortStatus').addEventListener('change', function() {
   getDatas(this.value);
 });
 
-async function getDatas(filteredStatus = 'All', url = "", keyword = "") {
-    const get_events = document.getElementById("get_event");
+const get_events = document.getElementById("get_event");
   
-    get_events.innerHTML = ` <div class="d-flex request-head shadow-sm">
-          ${'<div class="event-hasevents"><span class="spinner-border" role="status"></span></div>'.repeat(7)}
-        </div>`;
+get_events.innerHTML = ` <div class="d-flex request-head shadow-sm">
+      ${'<div class="event-hasevents"><span class="spinner-border" role="status"></span></div>'.repeat(7)}
+    </div>`;
 
+async function getDatas(filteredStatus = 'All', url = "", keyword = "") {
 let queryParams = 
     "?" + 
     (url ? new URL(url).searchParams + "&" : "") + 

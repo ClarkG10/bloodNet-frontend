@@ -67,14 +67,6 @@
             </a>
           </div>
           <div>
-            <a href="compatibilityChecker.html" class="nav-link d-flex opacity">
-              <div class="ms-4 p-2">
-                <img src="assets/icon/b-donor.png" alt="" width="18px" />
-              </div>
-              <span class="padding">Compatibility Checker</span>
-            </a>
-          </div>
-          <div>
             <a href="user.html" class="nav-link d-flex opacity">
               <div class="ms-4 p-2">
                 <img src="assets/icon/b-users.png" alt="" width="18px" />
@@ -90,7 +82,7 @@
               <span class="padding">Profile</span>
             </a>
           </div>
-          <br /><br /><br /><br /><br /><br /><br /><br /><br />
+          <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
           <!-- logout -->
           <div class="logout">
             <span
@@ -113,26 +105,95 @@
           <h4 class="fw-bold">Blood Centers</h4>
           <span>Request blood from blood centers</span>
         </div>
-        <form id="search_form">
-          <div class="d-flex mb-3 mt-2 ms-3 mt-4">
-            <input
-              type="text"
-              placeholder="Search for name, city, or address"
-              class="me-2 py-2 ps-3"
-              style="
-                border: 2px #b43929 solid;
-                width: 1135px;
-                border-radius: 5px;
-              "
-              name="keyword"
-            />
-            <button
-              type="submit"
-              class="btn"
-              style="color: white; background-color: #b43929"
-            >
-              Search
-            </button>
+
+        <form id="filter_form">
+          <div
+            class="ms-3 bg-white ps-2 pt-3 rounded-3 mt-3"
+            style="width: 1216px"
+          >
+            <div class="fw-bold ms-2 mb-2">
+              <span class="fs-6">Filters</span>
+            </div>
+            <div class="ms-1 row d-flex">
+              <div class="col-3" style="margin-right: -10px">
+                <div>
+                  <select
+                    class="form-select form-control"
+                    id="blood_type"
+                    name="blood_type"
+                    required
+                  >
+                    <option selected disabled>Select types of blood</option>
+                    <option value="O-">O-</option>
+                    <option value="O+">O+</option>
+                    <option value="A-">A-</option>
+                    <option value="A+">A+</option>
+                    <option value="B-">B-</option>
+                    <option value="B+">B+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="AB+">AB+</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-3">
+                <div style="margin-right: -10px">
+                  <select
+                    class="form-select form-control"
+                    id="component"
+                    name="component"
+                    required
+                  >
+                    <option selected disabled>Select types of Component</option>
+                    <option value="Whole Blood">Whole Blood</option>
+                    <option value="Red Blood Cells">Red Blood Cells</option>
+                    <option value="White Blood Cells">White Blood Cells</option>
+                    <option value="Platelets">Platelets</option>
+                    <option value="Plasma">Plasma</option>
+                    <option value="Cryoprecipitate">Cryoprecipitate</option>
+                    <option value="Granulocytes">Granulocytes</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="mb-3" style="margin-right: -10px">
+                  <select
+                    class="form-select form-control"
+                    id="urgency_scale"
+                    name="urgency_scale"
+                    required
+                  >
+                    <option selected disabled>Select Urgency Scale</option>
+                    <option value="Routine">Routine</option>
+                    <option value="Non-urgent">Non-urgent</option>
+                    <option value="Urgent">Urgent</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+              <div style="width: 190px">
+                <div style="margin-right: -10px">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="units"
+                    name="quantity"
+                    placeholder="Input blood units"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-1" style="margin-top: 3px">
+                <button type="submit" class="updateButton">
+                  <img
+                    src="assets/icon/settings-sliders.png"
+                    alt=""
+                    width="15px"
+                    class="me-2"
+                  />
+                  Filter
+                </button>
+              </div>
+            </div>
           </div>
         </form>
         <div
@@ -142,7 +203,7 @@
         >
           <div class="d-flex">
             <span class="fw-bold font-size d-flex ms-2 mb-2 mt-1">
-              List of Blood Center</span
+              Search for Blood Center</span
             >
           </div>
           <div id="get_bloodCenters"></div>

@@ -39,17 +39,21 @@ createUser_form.onsubmit = async (e) => {
 }
 
 getDatas();
+const getStaffAdmin = document.getElementById("get_staffAdmin");
+const getStaff = document.getElementById("get_staff");
+
+const placeholder = `<div class="placeholder-glow mt-2" role="status">
+<span class="placeholder rounded-3">Loading...</span></div>`;
+
+getStaffAdmin.innerHTML = placeholder;
+getStaff.innerHTML = placeholder;
+
 async function getDatas(keyword = "") {
     const getAdmin = document.getElementById("get_admin");
-    const getStaff = document.getElementById("get_staff");
-    const getStaffAdmin = document.getElementById("get_staffAdmin");
     const add_userButton = document.getElementById("add_userButton");
 
-    const placeholder = `<div class="placeholder-glow mt-2" role="status">
-          <span class="placeholder rounded-3">Loading...</span></div>`;
 
-    getStaffAdmin.innerHTML = placeholder;
-    getStaff.innerHTML = placeholder;
+
 
     let queryParams = 
     "?" + 
