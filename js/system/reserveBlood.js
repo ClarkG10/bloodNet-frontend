@@ -235,7 +235,8 @@ async function getDatas(filterComponent = 'All', url = null) {
                                     <span class="font-size"><strong>Component: </strong>${stock.component}</span><br />
                                     <span class="font-size"><strong>Current Units: </strong>${stock.avail_blood_units}</span><br />
                                     <form id="update_units_${stock.reserveBlood_id}">
-                                        <div class="form-floating mb-3 mt-3" class="font-size">
+                                    <div class="d-flex">
+                                        <div class="form-floating mt-3 me-2" class="font-size">
                                             <input
                                                 type="number"
                                                 class="form-control"
@@ -244,7 +245,7 @@ async function getDatas(filterComponent = 'All', url = null) {
                                             />
                                             <label for="avail_blood_units" style="font-size: 16px">Subtract units (-)</label>
                                         </div>
-                                        <div class="form-floating mb-3 mt-3" class="font-size">
+                                        <div class="form-floating mb-1 mt-3" class="font-size">
                                             <input
                                                 type="number"
                                                 class="form-control"
@@ -252,6 +253,7 @@ async function getDatas(filterComponent = 'All', url = null) {
                                                 name="added_units"
                                             />
                                             <label for="avail_blood_units" style="font-size: 16px">Add units (+)</label>
+                                        </div>
                                         </div>
                                         <hr />
                                         <div class="d-flex align-items-end justify-content-end">
