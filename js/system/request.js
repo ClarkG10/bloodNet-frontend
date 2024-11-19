@@ -161,8 +161,127 @@ function requestHTML(json_inventory, request, requestOrg, receiverOrg, orgType) 
                 <button class="btn btn-outline-secondary undoButton" data-id="${request.request_id}"  data-status="undo">Undo</button>` : ``}
             </div>
         </div>
-    </div>`;
+    </div>
+    
+        <!-- Update Request Modal -->
+    <div class="modal fade" id="updateRequestModal_${request.request_id}" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateRequestModalLabel"><small>Requested to:</small> <br>${receiverOrg.org_name}</h5>
+          </div>
+          <div class="modal-body p-2">
+            <form id="request_form_${request.request_id}">
+              <div class="form-floating mb-3 mt-3">
+                <select class="form-select form-control" id="bloodTypes" name="blood_type">
+                  <option value="O-" ${request.blood_type === "O-" ? "selected" : ""}>O-</option>
+                  <option value="A-" ${request.blood_type === "A-" ? "selected" : ""}>A-</option>
+                  <option value="B-" ${request.blood_type === "B-" ? "selected" : ""}>B-</option>
+                  <option value="AB-" ${request.blood_type === "AB-" ? "selected" : ""}>AB-</option>
+                  <option value="O+" ${request.blood_type === "O+" ? "selected" : ""}>O+</option>
+                  <option value="A+" ${request.blood_type === "A+" ? "selected" : ""}>A+</option>
+                  <option value="B+" ${request.blood_type === "B+" ? "selected" : ""}>B+</option>
+                  <option value="AB+" ${request.blood_type === "AB+" ? "selected" : ""}>AB+</option>
+                </select>
+                <label for="blood_type">Blood Type</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select form-control" id="component" name="component" required>
+                  <option value="Whole Blood" ${request.component === "Whole Blood" ? "selected" : ""}>Whole Blood</option>
+                  <option value="Red Blood Cells" ${request.component === "Red Blood Cells" ? "selected" : ""}>Red Blood Cells</option>
+                  <option value="White Blood Cells" ${request.component === "White Blood Cells" ? "selected" : ""}>White Blood Cells</option>
+                  <option value="Platelets" ${request.component === "Platelets" ? "selected" : ""}>Platelets</option>
+                  <option value="Plasma" ${request.component === "Plasma" ? "selected" : ""}>Plasma</option>
+                  <option value="Cryoprecipitate" ${request.component === "Cryoprecipitate" ? "selected" : ""}>Cryoprecipitate</option>
+                  <option value="Granulocytes" ${request.component === "Granulocytes" ? "selected" : ""}>Granulocytes</option>
+                </select>
+                <label for="component">Components</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select form-control" id="urgency_scale" name="urgency_scale" required>
+                  <option value="Routine" ${request.urgency_scale === "Routine" ? "selected" : ""}>Routine</option>
+                  <option value="Non-urgent" ${request.urgency_scale === "Non-urgent" ? "selected" : ""}>Non-urgent</option>
+                  <option value="Urgent" ${request.urgency_scale === "Urgent" ? "selected" : ""}>Urgent</option>
+                  <option value="Critical" ${request.urgency_scale === "Critical" ? "selected" : ""}>Critical</option>
+                </select>
+                <label for="urgency_scale">Urgency Scale</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Units" value="${request.quantity}" />
+                <label for="quantity">Units</label>
+              </div>
+              <hr />
+              <div class="d-flex align-items-end justify-content-end">
+                <button type="submit" class="button1 me-2 updateRequest justify-content-center" style="font-size: 16px" data-id="${request.request_id}">
+                  Update
+                </button>
+                <button type="button" class="buttonBack modal_close" data-bs-dismiss="modal" style="font-size: 16px">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Update Request Modal -->
+
+    <!-- View stocks Modal -->
+    <div class="modal fade" id="viewStocks_${request.request_id}" tabindex="-1" aria-labelledby="viewStockModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="viewStockModalLabel">${requestOrg.org_name}</h5>
+            <button type="button" class="btn-close me-1" data-bs-dismiss="modal" aria-label="Close" style="box-shadow: none"></button>
+          </div>
+          <div class="modal-body font-size">
+              <div class="d-flex">
+                <span class="fw-bold font-size d-flex ms-2">
+                  Available stocks</span
+                >
+              </div>
+            <div
+                class="d-flex shadow-sm mt-2 bg-secondary"
+                style="font-weight: bold; color: white; border-radius: 10px"
+              >
+                <div class="has-body flex-grow-1">Blood type</div>
+                <div class="has-body flex-grow-1">Component</div>
+                <div class="has-body flex-grow-1">Units</div>
+              </div>
+              ${getAvailStocks(json_inventory, request.user_id)}
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- View stocks Modal -->
+`;
 }
+
+function getAvailStocks(inventory, org_id) {
+    let stocks = "";
+    let hasStock = false;
+  
+    inventory.forEach((stock) => {
+        const blood_type = stock.blood_type + stock.rh_factor;
+  
+        if (stock.user_id == org_id) {
+          hasStock = true;
+            stocks += `<div class="d-flex mt-1">
+                <div class="has-body flex-grow-1">${blood_type}</div>
+                <div class="has-body flex-grow-1">${stock.component}</div>
+                <div class="has-body flex-grow-1">${stock.avail_blood_units}</div>
+            </div>`;
+        }
+    });
+  
+    if(!hasStock) {
+      stocks =  `<div class="d-flex mt-1">
+                <div class="has-body flex-grow-1">No stocks Available</div>
+            </div>`;
+    }
+  
+    return stocks;
+  }
 
 const request_search_form = document.getElementById("search_form");
 request_search_form.onsubmit = async (e) => {

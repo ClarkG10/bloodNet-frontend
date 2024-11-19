@@ -4,8 +4,6 @@ logout();
 
 getDatas();
 
-
-
 async function getDatas(stockRequest = {}) {
     const get_bloodCenters = document.getElementById("get_bloodCenters");
 
@@ -40,16 +38,18 @@ async function getDatas(stockRequest = {}) {
 
         let bloodCenter = "";
         let hasBloodCenter = false;
+        let hasRequested = false;
 
         // Loop through inventory and apply filtering logic
         for (const stock of json_inventory) {
-            const stockBloodType = stock.blood_type + stock.rh_factor + stock.component;
+            const stockBloodType = `${stock.blood_type}${stock.rh_factor}${stock.component}`;
             const requestedBlood = bloodType + component;
+            const inventoryStock = parseInt(stock.avail_blood_units);
+            const requestStock = parseInt(quantity);
 
             // Check if the stock matches the requested blood type and component
-            if (stockBloodType === requestedBlood && stock.avail_blood_units >= quantity) {
-                const org = json_organization.find(org => org.user_id === stock.user_id && org.org_type === "Blood Center");
-
+            if (stockBloodType === requestedBlood && inventoryStock >= requestStock) {
+                const org = json_organization.find(org => org.org_type === "Blood Center");
                 if (org) {
                     hasBloodCenter = true;
                     bloodCenter += createBloodCenterCard(org, requestOrg, stockRequest, json_inventory);
@@ -57,7 +57,7 @@ async function getDatas(stockRequest = {}) {
             }
         }
 
-        if (!hasBloodCenter) {
+        if (!hasBloodCenter && !hasRequested) {
             bloodCenter = `<div class="flex-grow-1 p-4 text-center shadow-sm rounded-3">Search by filtering</div>`;
         }
 
