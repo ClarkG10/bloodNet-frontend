@@ -1,4 +1,4 @@
-import { backendURL, formatTimeDifference, logout, hasThreeMinutesPassed } from "../utils/utils.js";
+import { backendURL, formatTimeDifference, logout, hasThreeMinutesPassed, displayToastMessage } from "../utils/utils.js";
 
 getDatas();
 logout();
@@ -20,24 +20,11 @@ elements.forEach(element => element.innerHTML = placeholders);
 
 async function getDatas() {
     const [
-        organizationResponse, 
-        inventoryResponse, 
-        requestResponse, 
-        stockInResponse, 
-        stockOutResponse, 
-        profileResponse, 
-        organizationResponseAll
-    ] = await Promise.all([
-        fetchData("/api/organization"),
-        fetchData("/api/inventory/all"),
-        fetchData("/api/bloodrequest/all"),
-        fetchData("/api/stockIn"),
-        fetchData("/api/stockOut"),
-        fetchData("/api/profile/show"),
-        fetchData("/api/mobile/organization")
+        inventoryResponse, requestResponse, stockInResponse, stockOutResponse, profileResponse, organizationResponseAll] = await Promise.all([
+        fetchData("/api/inventory/all"), fetchData("/api/bloodrequest/all"), fetchData("/api/stockIn"), fetchData("/api/stockOut"),
+         fetchData("/api/profile/show"), fetchData("/api/mobile/organization")
     ]);
 
-    const json_organization = await organizationResponse.json();
     const json_inventory = await inventoryResponse.json();
     const json_request = await requestResponse.json();
     const stockInData = await stockInResponse.json();
@@ -81,9 +68,7 @@ function processChartData(stockInData, stockOutData, json_profile) {
 
             if (!acc[yearMonth]) {
                 acc[yearMonth] = { stockIn: 0, stockOut: 0 };
-            }
-
-            if (stocks.units_in) {
+            } if (stocks.units_in) {
                 acc[yearMonth].stockIn += stocks.units_in;
             } else {
                 acc[yearMonth].stockOut += stocks.units_out;
@@ -106,32 +91,30 @@ function processChartData(stockInData, stockOutData, json_profile) {
 }
 
 function handleRequests(requests, organizations) {
-    let requestHTML = "";
-    let hasRequest = false;
+    let requestHTML = "", hasRequest = false;
         requests.forEach(request => {
             if (request.status === "Pending") {
                 const orgType = localStorage.getItem("type");
                 hasRequest = true;
-
                 const receiverOrg = organizations.find(org => org.user_id === request.receiver_id);
                 requestHTML += createRequestHTML(request, receiverOrg, orgType);
-                
             }
         });
 
     if(!hasRequest) {
         requestHTML = createNoRequestsHTML();
     }
-
-
     document.getElementById("get_requests").innerHTML = requestHTML;
     attachRequestListeners();
+
+    document.querySelectorAll(".updateRequest").forEach(button => {
+        button.addEventListener("click", updateRequestClick);
+    });
 }
 
 function handleStockAlerts(inventory) {
-    let alertHTML = "";
-    let hasAlert = inventory.some(stock => parseInt(stock.avail_blood_units) < 10);
-
+    let alertHTML = "", hasAlert = inventory.some(stock => parseInt(stock.avail_blood_units) < 10);
+    
     if (hasAlert) {
         inventory.forEach(stock => {
             if (parseInt(stock.avail_blood_units) < 10) {
@@ -141,7 +124,6 @@ function handleStockAlerts(inventory) {
     } else {
         alertHTML = createNoStockAlertsHTML();
     }
-
     document.getElementById("lowStock").innerHTML = alertHTML;
 }
 
@@ -157,10 +139,7 @@ function fetchData(endpoint) {
 function createBarChart(labels, dataStockIn, dataStockOut) {
     const ctx = document.querySelector("#inventoryBarChart");
    
-    if (!ctx) {
-        console.error("Chart element not found");
-        return;
-    }
+    if (!ctx) { console.error("Chart element not found"); return; }
 
     new Chart(ctx, {
         type: "bar",
@@ -203,10 +182,7 @@ function createBarChart(labels, dataStockIn, dataStockOut) {
 function createLineChart(labels, dataStockIn, dataStockOut) {
     const ctx = document.querySelector("#inventoryLineChart");
 
-    if (!ctx) {
-        console.error("Line chart element not found");
-        return;
-    }
+    if (!ctx) { console.error("Line chart element not found"); return; }
 
     new Chart(ctx, {
         type: "line",
@@ -243,7 +219,6 @@ function createLineChart(labels, dataStockIn, dataStockOut) {
         },
     });
     document.querySelector("#lineChartLoader").innerHTML = "";
-
 }
 
 // HTML structure for requests and alerts
@@ -268,14 +243,77 @@ function createRequestHTML(request, receiverOrg, orgType) {
             <button class="btn updateButton me-1" data-bs-toggle="modal" data-bs-target="#updateRequestModal_${request.request_id}">
               Update
             </button>`}
-            <button class="bg-secondary-subtle deleteRequest" 
+            <button class="bg-secondary-subtle deleteRequest " 
               style="cursor: pointer; padding: 5px !important; border-radius: 5px; border: none !important; padding-left: 12px !important; padding-right: 12px !important;" 
               data-id="${request.request_id}">
-              <img src="assets/icon/trash.png" alt="" width="15px" />
+              <img src="assets/icon/trash.png" alt="" width="15px" data-id="${request.request_id}"/>
             </button>
           </div>
         </div>
-      </div>`;
+      </div>
+      
+    <!-- Update Request Modal -->
+    <div class="modal fade" id="updateRequestModal_${request.request_id}" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateRequestModalLabel"><small>Requested to:</small> <br>${receiverOrg.org_name}</h5>
+          </div>
+          <div class="modal-body p-2">
+            <form id="request_form_${request.request_id}">
+              <div class="form-floating mb-3 mt-3">
+                <select class="form-select form-control" id="bloodTypes" name="blood_type">
+                  <option value="O-" ${request.blood_type === "O-" ? "selected" : ""}>O-</option>
+                  <option value="A-" ${request.blood_type === "A-" ? "selected" : ""}>A-</option>
+                  <option value="B-" ${request.blood_type === "B-" ? "selected" : ""}>B-</option>
+                  <option value="AB-" ${request.blood_type === "AB-" ? "selected" : ""}>AB-</option>
+                  <option value="O+" ${request.blood_type === "O+" ? "selected" : ""}>O+</option>
+                  <option value="A+" ${request.blood_type === "A+" ? "selected" : ""}>A+</option>
+                  <option value="B+" ${request.blood_type === "B+" ? "selected" : ""}>B+</option>
+                  <option value="AB+" ${request.blood_type === "AB+" ? "selected" : ""}>AB+</option>
+                </select>
+                <label for="blood_type">Blood Type</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select form-control" id="component" name="component" required>
+                  <option value="Whole Blood" ${request.component === "Whole Blood" ? "selected" : ""}>Whole Blood</option>
+                  <option value="Red Blood Cells" ${request.component === "Red Blood Cells" ? "selected" : ""}>Red Blood Cells</option>
+                  <option value="White Blood Cells" ${request.component === "White Blood Cells" ? "selected" : ""}>White Blood Cells</option>
+                  <option value="Platelets" ${request.component === "Platelets" ? "selected" : ""}>Platelets</option>
+                  <option value="Plasma" ${request.component === "Plasma" ? "selected" : ""}>Plasma</option>
+                  <option value="Cryoprecipitate" ${request.component === "Cryoprecipitate" ? "selected" : ""}>Cryoprecipitate</option>
+                  <option value="Granulocytes" ${request.component === "Granulocytes" ? "selected" : ""}>Granulocytes</option>
+                </select>
+                <label for="component">Components</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select form-control" id="urgency_scale" name="urgency_scale" required>
+                  <option value="Routine" ${request.urgency_scale === "Routine" ? "selected" : ""}>Routine</option>
+                  <option value="Non-urgent" ${request.urgency_scale === "Non-urgent" ? "selected" : ""}>Non-urgent</option>
+                  <option value="Urgent" ${request.urgency_scale === "Urgent" ? "selected" : ""}>Urgent</option>
+                  <option value="Critical" ${request.urgency_scale === "Critical" ? "selected" : ""}>Critical</option>
+                </select>
+                <label for="urgency_scale">Urgency Scale</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Units" value="${request.quantity}" />
+                <label for="quantity">Units</label>
+              </div>
+              <hr />
+              <div class="d-flex align-items-end justify-content-end">
+                <button type="submit" class="button1 me-2 updateRequest justify-content-center" style="font-size: 16px" data-id="${request.request_id}">
+                  Update
+                </button>
+                <button type="button" class="buttonBack modal_close" data-bs-dismiss="modal" style="font-size: 16px">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Update Request Modal -->`;
 }
 
 function createNoRequestsHTML() {
@@ -322,8 +360,9 @@ function attachRequestListeners() {
     document.querySelectorAll(".deleteRequest").forEach(button => {
         button.addEventListener("click", async (e) => {
             const requestId = e.target.getAttribute("data-id");
+            console.log(requestId);
             const confirmed = confirm("Are you sure you want to cancel this request?");
-
+            
             if (confirmed) {
                 try {
                     const response = await fetch(`${backendURL}/api/bloodrequest/${requestId}`, {
@@ -347,3 +386,43 @@ function attachRequestListeners() {
         });
     });
 }
+
+
+function updateRequestClick(e) {
+    const request_id = e.target.getAttribute("data-id");
+    console.log(request_id);
+    updateRequest(request_id);
+  }
+  
+  async function updateRequest(id) {
+        const status_form = document.getElementById("request_form_" + id);
+  
+        if (!status_form) return;
+  
+        status_form.onsubmit = async (e) => {
+            e.preventDefault();
+  
+            const formData = new FormData(status_form);
+            formData.append("_method", "PUT");
+  
+            const requestResponse = await fetch(backendURL + "/api/bloodrequest/" + id, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                },
+                body: formData,
+            });
+  
+            const json_request = await requestResponse.json();
+  
+            if (requestResponse.ok) {
+                displayToastMessage("update-success");
+                document.querySelector(`#updateRequestModal_${id} .modal_close`).click();
+                await getDatas();
+            } else {
+                displayToastMessage("update-fail");
+                console.error("Update failed:", json_request.message);
+            }
+        }
+    }

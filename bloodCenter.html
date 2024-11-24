@@ -13,6 +13,16 @@
     <script type="module" src="js/system/bloodCenter.js"></script>
     <title>Blood Center</title>
   </head>
+  <style>
+    /* Custom class for the tooltip */
+    .large-tooltip .tooltip-inner {
+      padding: 15px; /* Add extra padding */
+      max-width: 500px; /* Increase maximum width */
+      background-color: #c6310f; /* Optional: light background */
+      color: white; /* Optional: dark text */
+      text-align: left; /* Align text to the left */
+    }
+  </style>
   <body>
     <div id="loader"></div>
     <div class="row" id="hide">
@@ -161,6 +171,15 @@
                     id="urgency_scale"
                     name="urgency_scale"
                     required
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-html="true"
+                    data-bs-custom-class="large-tooltip"
+                    title="
+        <strong>Routine</strong>: No immediate requirement.<br>
+        <strong>Non-urgent</strong>: Should be addressed soon.<br>
+        <strong>Urgent</strong>: Requires immediate attention.<br>
+        <strong>Critical</strong>: Life-threatening situation."
                   >
                     <option selected disabled>Select Urgency Scale</option>
                     <option value="Routine">Routine</option>
@@ -210,5 +229,16 @@
         </div>
       </div>
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      });
+    </script>
   </body>
 </html>

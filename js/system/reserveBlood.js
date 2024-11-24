@@ -63,7 +63,6 @@ inventory_form.onsubmit = async (e) => {
     });
 
     const json_inventory = await inventoryResponse.json();
-
     const id = json_inventory.reserveBlood_id;
 
     const newAddedStockResponse = await fetch(backendURL + "/api/reserveblood/" + id, {
@@ -165,7 +164,6 @@ async function getDatas(filterComponent = 'All', url = null) {
 
     const json_inventory = await inventoryResponse.json();
     const json_inventoryAll = await inventoryResponseAll.json();
-
 
     if (inventoryResponse.ok) {
         console.log("Inventory response:", json_inventory);

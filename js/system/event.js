@@ -7,6 +7,11 @@ getPendingRequest();
 const event_form = document.getElementById("event_form");
 const generateReportButton = document.getElementById("generateEventReport");
 
+const headers = {
+  Accept: "application/json",
+  Authorization: "Bearer " + localStorage.getItem("token"),
+};
+
 event_form.onsubmit = async (e) => {
     e.preventDefault();
 
@@ -18,10 +23,7 @@ event_form.onsubmit = async (e) => {
 
     const eventResponse = await fetch(backendURL + "/api/event",{
         method: "POST",
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-        },
+        headers,
         body: formData,
     });
 
@@ -40,14 +42,9 @@ event_form.onsubmit = async (e) => {
 }
 
 generateReportButton.onclick = async () => {
-  const eventResponse = await fetch(backendURL + "/api/event/all", {
-      headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-      }
-  });
-
+  const eventResponse = await fetch(backendURL + "/api/event/all", { headers });
   const json_event = await eventResponse.json();
+
   console.log(json_event)
   if (eventResponse.ok) {
       const csvData = jsonToCSV(json_event);
@@ -67,15 +64,14 @@ function downloadCSV(csvData, filename) {
   document.body.removeChild(a);
 }
 
-document.getElementById('sortStatus').addEventListener('change', function() {
-  getDatas(this.value);
-});
-
 const get_events = document.getElementById("get_event");
   
 get_events.innerHTML = ` <div class="d-flex request-head shadow-sm">
       ${'<div class="event-hasevents"><span class="spinner-border" role="status"></span></div>'.repeat(7)}
     </div>`;
+document.getElementById('sortStatus').addEventListener('change', function() {
+  getDatas(this.value);
+});
 
 async function getDatas(filteredStatus = 'All', url = "", keyword = "") {
 let queryParams = 
@@ -83,36 +79,66 @@ let queryParams =
     (url ? new URL(url).searchParams + "&" : "") + 
     (keyword ? "keyword=" + encodeURIComponent(keyword) : "");
   
-    const eventResponse = await fetch(url || backendURL + "/api/event" + queryParams, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    });
+    const eventResponse = await fetch(url || backendURL + "/api/event" + queryParams, { headers});
+    const eventResponseAll = await fetch( backendURL + "/api/event/all", { headers });
 
-    const eventResponseAll = await fetch( backendURL + "/api/event/all", {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    });
-  
     const json_event = await eventResponse.json();
     const json_eventAll = await eventResponseAll.json();
 
-  
     if (eventResponse.ok) {
       let hasEvent = false;
       let events = "";
       const eventData = json_event.data;
   
       if (Array.isArray(eventData)) {
-        const filteredEvent = filteredStatus === 'All' ? eventData : json_eventAll.filter(event => event.status === filteredStatus);
+        const filteredEvent = filteredStatus === 'All' ? eventData 
+        : json_eventAll.filter(event => event.status === filteredStatus);
   
         filteredEvent.forEach((event) => {
           hasEvent = true;
-  
-          events += `<div class="d-flex request-head shadow-sm">
+          events += createEventHTML(event);
+        });
+      } else {
+          console.error("Unexpected data format:", json_event);
+      }
+
+      if (!hasEvent) {
+          events = noEventHTML();
+      }
+      get_events.innerHTML = events;
+
+      let pagination = "";
+      if (json_event.links) {
+          json_event.links.forEach((link) => {
+              pagination += `
+                  <li class="page-item" >
+                      <a class="page-link ${link.url == null ? " disabled" : ""}${link.active ? " active" : ""}" href="#" data-url="${link.url}" style="color: #b43929">
+                          ${link.label}
+                      </a>
+                  </li>`;
+          });
+      }
+
+      document.querySelectorAll(".deleteButton").forEach(button => {
+        button.addEventListener("click", deleteClick);
+    });
+    document.querySelectorAll(".updateButton").forEach(button => {
+        button.addEventListener("click", updateClickInfo);
+    });
+    document.querySelectorAll(".updateStatusButton").forEach(button => {
+        button.addEventListener("click", updateClickStatus);
+    });
+      document.getElementById("pages").innerHTML = pagination;
+      document.querySelectorAll("#pages .page-link").forEach((link) => {
+          link.addEventListener("click", pageAction);
+      });
+  }else {
+      alert(json_event.message);
+  }
+}
+
+function createEventHTML(event){
+  return `<div class="d-flex request-head shadow-sm">
             <div class="event-hasevents">${event.event_name}</div>
             <div class="event-hasevents">${event.event_location}</div>
             <div class="event-hasevents">${event.start_date}</div>
@@ -192,14 +218,6 @@ let queryParams =
                     <tr>
                       <td><strong>Description:</strong></td>
                       <td class="ps-4">${event.description}</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Gender:</strong></td>
-                      <td class="ps-4">${event.gender}</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Weight:</strong></td>
-                      <td class="ps-4">${event.weight}</td>
                     </tr>
                     <tr>
                       <td><strong>Minimum Age:</strong></td>
@@ -365,30 +383,6 @@ let queryParams =
                 <input
                   type="number"
                   class="form-control"
-                  id="weight"
-                  name="weight"
-                  value="${event.weight}"
-                  
-                />
-                <label for="weight">Weight</label>
-              </div>
-              <div class="form-floating mb-3 flex-grow-1">
-                <select
-                  class="form-select"
-                  id="gender"
-                  name="gender"
-                  
-                >
-                  <option value="Male" ${event.gender === 'Male' ? 'selected' : ''}>Male</option>
-                  <option value="Female" ${event.gender === 'Female' ? 'selected' : ''}>Female</option>
-                  <option value="All" ${event.gender === 'All' ? 'selected' : ''}>All</option>
-                </select>
-                <label for="gender">Gender</label>
-              </div>
-              <div class="form-floating mb-3 flex-grow-1">
-                <input
-                  type="number"
-                  class="form-control"
                   id="minimumAge"
                   name="min_age"
                   value="${event.min_age}"
@@ -473,62 +467,20 @@ let queryParams =
         </div>
       </div>
     </div>
-  </div>`;
-        });
-      } else {
-          console.error("Unexpected data format:", json_event);
-      }
+  </div>`
+}
 
-      if (!hasEvent) {
-          events = `
-          <!-- For No New Event -->
+function noEventHTML() {
+  return `<!-- For No New Event -->
           <div class="d-flex norequest-head shadow-sm">
             <div class="event-noevents"></div>
             <div class="event-noevents"></div>
-            <div class="event-noevents fw-bold"></div>
             <div class="event-noevents mt-3 mb-3">No Event</div>
             <div class="event-noevents"></div>
             <div class="event-noevents"></div>
-            <div class="event-noevents text-center" id="color"></div>
+            <div class="event-noevents></div>
           </div>
-          <!-- For No New Event -->`;
-      }
-      get_events.innerHTML = events;
-
-      let pagination = "";
-
-      if (json_event.links) {
-          json_event.links.forEach((link) => {
-              pagination += `
-                  <li class="page-item" >
-                      <a class="page-link ${link.url == null ? " disabled" : ""}${link.active ? " active" : ""}" href="#" data-url="${link.url}" style="color: #b43929">
-                          ${link.label}
-                      </a>
-                  </li>`;
-          });
-      }
-
-      document.querySelectorAll(".deleteButton").forEach(button => {
-        button.addEventListener("click", deleteClick);
-    });
-
-    document.querySelectorAll(".updateButton").forEach(button => {
-        button.addEventListener("click", updateClickInfo);
-    });
-
-    document.querySelectorAll(".updateStatusButton").forEach(button => {
-        button.addEventListener("click", updateClickStatus);
-    });
-
-      document.getElementById("pages").innerHTML = pagination;
-
-      document.querySelectorAll("#pages .page-link").forEach((link) => {
-          link.addEventListener("click", pageAction);
-      });
-
-  } else {
-      alert(json_event.message);
-  }
+          <!-- For No New Event -->`
 }
 
 const event_search_form = document.getElementById("search_form");
@@ -537,8 +489,7 @@ event_search_form.onsubmit = async (e) => {
 
     const formData = new FormData(event_search_form); 
     const keyword = formData.get("keyword");
-    console.log(keyword)
-
+    
     getDatas("All", "", keyword);
 }
 
@@ -557,45 +508,44 @@ function updateClickInfo(e) {
   }
 
 async function updateEventInfo(id) {
-  const update_form = document.getElementById("update_form_" + id);
-  console.log(update_form);
+    const update_form = document.getElementById("update_form_" + id);
 
-  if (!update_form) return;
+    if (!update_form) return;
 
-  update_form.onsubmit = async (e) => {
-      e.preventDefault();
+    update_form.onsubmit = async (e) => {
+        e.preventDefault();
 
-      const updateButton = document.querySelector("#updateEventButton_" + id);
-      updateButton.disabled = true;
-      updateButton.innerHTML = `<div class="spinner-border" role="status"></div>`;
+        const updateButton = document.querySelector("#updateEventButton_" + id);
+        updateButton.disabled = true;
+        updateButton.innerHTML = `<div class="spinner-border" role="status"></div>`;
 
-      const formData = new FormData(update_form);
-      formData.append("_method", "PUT");
+        const formData = new FormData(update_form);
+        formData.append("_method", "PUT");
 
-      const eventResponse = await fetch(backendURL + "/api/event/eventInfo/" + id, {
-          method: "POST",
-          headers: {
-              Accept: "application/json",
-              Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-          body: formData,
-      });
+        try {
+            const eventResponse = await fetch(backendURL + "/api/event/eventInfo/" + id, {
+                method: "POST",
+                headers,
+                body: formData,
+            });
 
-      const json_event = await eventResponse.json();
+            const json_event = await eventResponse.json();
 
-      if (eventResponse.ok) {
-        displayToastMessage("update-success");
+            if (eventResponse.ok) {
+                displayToastMessage("update-success");
+                document.querySelector(`#updateEventModal_${id} .buttonBack`).click();
+                await getDatas();
+            } else {
+                throw new Error(json_event.message);
+            }
+        } catch (error) {
+            displayToastMessage("update-fail");
+            console.error("Update failed:", error.message);
+        }
 
-          document.querySelector(`#updateEventModal_${id} .buttonBack`).click();
-          await getDatas();
-      } else {
-        displayToastMessage("update-fail");
-          console.error("Update failed:", json_event.message);
-      }
-
-      updateButton.disabled = false;
-      updateButton.innerHTML = `Update`;
-  }
+        updateButton.disabled = false;
+        updateButton.innerHTML = `Update`;
+    }
 }
 
   function updateClickStatus(e) {
@@ -621,10 +571,7 @@ async function updateEventInfo(id) {
     
                 const eventResponse = await fetch(backendURL + "/api/event/status/" + id, {
                     method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: "Bearer " + localStorage.getItem("token"),
-                    },
+                    headers,
                     body: formData,
                 });
     
@@ -646,10 +593,7 @@ async function deleteEvent(id) {
   if (confirm("Are you sure you want to delete this event item?")) {
       const eventResponse = await fetch(backendURL + "/api/event/" + id, {
           method: "DELETE",
-          headers: {
-              Accept: "application/json",
-              Authorization: "Bearer " + localStorage.getItem("token"),
-          },
+          headers,
       });
 
       const json_event = await eventResponse.json();

@@ -5,6 +5,11 @@ userlogged();
 logout();
 getPendingRequest();
 
+const headers = {
+  Accept: "application/json",
+  Authorization: "Bearer " + localStorage.getItem("token"),
+};
+
 const createUser_form = document.getElementById("createUser_form");
 
 createUser_form.onsubmit = async (e) => {
@@ -17,12 +22,7 @@ createUser_form.onsubmit = async (e) => {
     const formData = new FormData(createUser_form);
 
     const staffResponse = await fetch(backendURL + "/api/staff", {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer "+ localStorage.getItem("token"),
-        },
-        body: formData,
+        method: "POST", headers, body: formData,
     });
     const json_staff = await staffResponse.json();
 
@@ -39,78 +39,84 @@ createUser_form.onsubmit = async (e) => {
 }
 
 getDatas();
-const getStaffAdmin = document.getElementById("get_staffAdmin");
+
+const getNewAdmin = document.getElementById("get_staffAdmin");
 const getStaff = document.getElementById("get_staff");
 
 const placeholder = `<div class="placeholder-glow mt-2" role="status">
 <span class="placeholder rounded-3">Loading...</span></div>`;
 
-getStaffAdmin.innerHTML = placeholder;
+getNewAdmin.innerHTML = placeholder;
 getStaff.innerHTML = placeholder;
 
 async function getDatas(keyword = "") {
     const getAdmin = document.getElementById("get_admin");
-    const add_userButton = document.getElementById("add_userButton");
-
-
-
+    const addUserButton = document.getElementById("add_userButton");
 
     let queryParams = 
-    "?" + 
-    // (url ? new URL(url).searchParams + "&" : "") + 
-    (keyword ? "keyword=" + encodeURIComponent(keyword) + "&" : "");
+    "?" + (keyword ? "keyword=" + encodeURIComponent(keyword) + "&" : "");
 
-    const staffResponse = await fetch(backendURL + "/api/staff/all" + queryParams, {
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer "+ localStorage.getItem("token"),
-        },
-    });
-
-    const profileResponse = await fetch(backendURL + "/api/profile/show", {
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer "+ localStorage.getItem("token"),
-        },
-    });
-
-    const organizationResponse = await fetch(backendURL + "/api/mobile/organization", {
-        headers: {
-            Accept: "application/json",
-        },
-    });
+    const staffResponse = await fetch(backendURL + "/api/staff/all" + queryParams, { headers });
+    const profileResponse = await fetch(backendURL + "/api/profile/show", { headers });
+    const organizationResponse = await fetch(backendURL + "/api/mobile/organization", { headers });
     
     const json_staff = await staffResponse.json();
     const json_profile = await profileResponse.json();
     const json_organization = await organizationResponse.json();
 
     if(staffResponse.ok && profileResponse.ok){
-
-        let adminHTML = "";
-        let staffHTML = "";
-        let staffAdminHTML = "";
-        let addUserButton = "";
-        let hasStaff = false;
-        let index = 0;
+        let adminHTML = "", staffHTML = "", newAdminHTML = "", addUserButtonHTML = "", hasStaff = false;
 
         for (const org of json_organization) {
-            index++
             if(json_profile.id === org.user_id || json_profile.user_id === org.user_id){
-                adminHTML += `
-                    <div class="d-flex ms-3 mt-2">
-                        <div class="user-body" style="width: 220px !important">${org.org_name}<br><small style="color: #b43929">${org.org_email}</small></div>
-                        <div class="user-body" style="width: 220px !important">${org.address}</div>
-                        <div class="user-body" style="width: 420px !important">${org.contact_info}</div>
-                        <div class="user-body text-success"  style="max-width: 200px !important"><span class="bg-secondary-subtle py-2 rounded-5" style="padding-right: 30px;padding-left: 30px;">${json_profile.role}</span></div>
-                    </div>`;    
+                adminHTML += createAdminHTML(org, json_profile);    
                 }
         }
-
         getAdmin.innerHTML = adminHTML;
 
         json_staff.forEach(staff => {
             if(json_profile.user_id === staff.user_id || json_profile.id === staff.user_id  ){
-            let staffContent = `
+             let staffContent = createStaffHTML(staff, json_profile); ;
+           
+            if (staff.role === "admin") {;
+                newAdminHTML += staffContent
+            } else {
+                hasStaff = true;
+                staffHTML += staffContent;
+            }
+        }
+        });
+
+        if(json_profile.role === "admin"){
+            addUserButtonHTML = getAddUserButton();
+        }
+        if (!hasStaff) {
+            staffHTML = noRegisteredUserHTML();
+        }
+        addUserButton.innerHTML = addUserButtonHTML;
+        getNewAdmin.innerHTML = newAdminHTML;
+        getStaff.innerHTML = staffHTML;
+    }
+    document.querySelectorAll(".deleteButton").forEach(button => {
+        button.addEventListener("click", deleteClick);
+    });
+
+    document.querySelectorAll(".updateRoleButton").forEach(button => {
+        button.addEventListener("click", updateClickStatus);
+    });
+}
+
+function createAdminHTML(org, json_profile) {
+  return `<div class="d-flex ms-3 mt-2">
+              <div class="user-body" style="width: 220px !important">${org.org_name}<br><small style="color: #b43929">${org.org_email}</small></div>
+              <div class="user-body" style="width: 220px !important">${org.address}</div>
+              <div class="user-body" style="width: 420px !important">${org.contact_info}</div>
+              <div class="user-body text-success"  style="max-width: 200px !important"><span class="bg-secondary-subtle py-2 rounded-5" style="padding-right: 30px;padding-left: 30px;">${json_profile.role}</span></div>
+          </div>`
+}
+
+function createStaffHTML(staff, json_profile) {
+  return `
               <div class="d-flex ms-3 mt-2">
                 <div class="user-body" style="width: 220px !important">${staff.fullname}<br><small style="color: #b43929">${staff.email}</small></div>
                 <div class="user-body" style="width: 220px !important">${staff.address}</div>
@@ -192,20 +198,11 @@ async function getDatas(keyword = "") {
           </div>
         </div>
       </div>
-    </div>`;
-           
-            if (staff.role === "admin") {
-                staffAdminHTML += staffContent;
-            } else {
-                hasStaff = true;
-                staffHTML += staffContent;
-            }
-        }
-        });
+    </div>`
+}
 
-
-        if(json_profile.role === "admin"){
-            addUserButton = `<button
+function getAddUserButton(){
+  return  `<button
             class="bloodCompatibilityChecker px-3 py-1"
             style="right: 37px; bottom: 668px; background-color: #b43929"
             type="button"
@@ -214,26 +211,13 @@ async function getDatas(keyword = "") {
           >
             Add new user
           </button>`
-        }
-        if (!hasStaff) {
-            staffHTML = `<div class="d-flex text-center">
-              <div class="user-body flex-grow-1 my-3">No Registered User</div>
-            </div>`;
-        }
-
-        add_userButton.innerHTML = addUserButton;
-        getStaffAdmin.innerHTML = staffAdminHTML;
-        getStaff.innerHTML = staffHTML;
-    }
-    document.querySelectorAll(".deleteButton").forEach(button => {
-        button.addEventListener("click", deleteClick);
-    });
-
-    document.querySelectorAll(".updateRoleButton").forEach(button => {
-        button.addEventListener("click", updateClickStatus);
-    });
 }
 
+function noRegisteredUserHTML(){
+  return `<div class="d-flex text-center">
+              <div class="user-body flex-grow-1 my-3">No Registered User</div>
+            </div>`
+}
 const request_search_form = document.getElementById("search_form");
 request_search_form.onsubmit = async (e) => {
     e.preventDefault(); 

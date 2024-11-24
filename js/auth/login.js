@@ -12,34 +12,32 @@ togglePassword.addEventListener("click", () => {
     : `<img src="assets/icon/eye.png" alt="Hide Password" width="17px" />`;
 });
 
+const headers = {
+  Accept: "application/json",
+  Authorization: "Bearer " + localStorage.getItem("token"),
+}
+
 form_login.onsubmit = async (e) => {
   e.preventDefault();
-
-  document.querySelector("#form_login button").disabled = true;
-  document.querySelector("#form_login button").innerHTML = `<div class="spinner-border" role="status" width="30px">
-                                                              </div><span class="ms-2">Loading...</span>`;
+  
+  const loginButton =  document.querySelector("#form_login button");
+  loginButton.disabled = true;
+  loginButton.innerHTML = `<div class="spinner-border" role="status" width="30px"></div><span class="ms-2">Loading...</span>`;
 
   const formData = new FormData(form_login);
 
   const loginResponse = await fetch(backendURL + "/api/login", {
-    method: "POST", 
-    headers: {
-      Accept: "application/json",
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
-    body: formData,
-  }); 
+    method: "POST", headers, body: formData }); 
+
+  const json_login = await loginResponse.json();
 
   if (loginResponse.ok) {
-    const json = await loginResponse.json();
-    localStorage.setItem("token", json.token);
+    localStorage.setItem("token", json_login.token);
     form_login.reset();
-    checkOrgInfoStatus();
+    await checkOrgInfoStatus();
   } else {
-    const json = await loginResponse.json();
-    alert( json.message);
+    alert(json_login.message);
   }
-
-  document.querySelector("#form_login button").disabled = false;
-  document.querySelector("#form_login button").innerHTML = `Login`;
+  loginButton.disabled = false;
+  loginButton.innerHTML = `Login`;
 };

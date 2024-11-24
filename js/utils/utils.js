@@ -4,21 +4,15 @@ setRouter();
 // Backend URL
 const backendURL = "http://bloodnet-backend.test";
 
+const headers = {
+    Accept: "application/json",
+    Authorization: "Bearer " + localStorage.getItem("token"),
+};
+
 async function userlogged(){
 if(localStorage.getItem("token")){
-    const profileResponse = await fetch(backendURL + "/api/profile/show", { 
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-    });
-
-    const organizationResponse = await fetch(backendURL + "/api/mobile/organization", {
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-    });
+    const profileResponse = await fetch(backendURL + "/api/profile/show", { headers });
+    const organizationResponse = await fetch(backendURL + "/api/mobile/organization", { headers });
 
     const json_profile = await profileResponse.json();
     const json_organization = await organizationResponse.json();
@@ -54,12 +48,7 @@ async function logout(){
     
     document.getElementById("hide").classList.add('d-none');
     
-    const logoutResponse = await fetch(backendURL + "/api/logout", { 
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-    }); 
+    const logoutResponse = await fetch(backendURL + "/api/logout", {  headers }); 
         
     if(logoutResponse.ok){
         localStorage.clear();
@@ -76,18 +65,13 @@ async function checkOrgInfoStatus() {
     <img src="assets/imgs/redlogo.png" alt="bloodnet logo" /></div>`;
     
     if (localStorage.getItem("token")) {
-        const organizationResponse = await fetch(backendURL + "/api/mobile/organization", {
-            headers: {
-                Accept: "application/json",
-            },
-        });
-
-        const profileResponse = await fetch(backendURL + "/api/profile/show", {
+        const profileResponse = await fetch(backendURL + "/api/profile/show", { 
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-        });
+        },
+     });
+            const organizationResponse = await fetch(backendURL + "/api/mobile/organization", { headers });
         
         if (organizationResponse.ok && profileResponse.ok) {
             const json_organization = await organizationResponse.json();
@@ -110,7 +94,6 @@ async function checkOrgInfoStatus() {
                     }
                     if(!redirectToDashboard){
                         window.location.pathname = "/organizationInfo.html";
-                        
                     }
             } else {
                 console.error("No organization data found.");
@@ -130,16 +113,11 @@ async function checkOrgInfoStatus() {
             }
             return filteredRow;
         });
-        console.log(filteredData);
 
         const headers = Object.keys(filteredData[0]).join(',');
-        console.log(headers);
-
         const rows = filteredData.map(data => {
             return Object.values(data).map(value => `"${value}"`).join(',');
-        });
-        console.log(rows)
-    
+        });    
         return [headers, ...rows].join('\n');
     }
     
@@ -204,63 +182,18 @@ function hasThreeMinutesPassed(createdAt) {
   }
   
 
-async function setRoleAndPermission() {
-    // const navLinks = document.querySelectorAll('.nav-link');
-    // const originalContent = [];
-    // const elementsState = [];
-    
-    // navLinks.forEach((link, index) => {
-    //     originalContent[index] = link.innerHTML;
-    //     link.classList.add('disabled');
-        
-    //     elementsState[index] = {
-    //         hasFocus: link.classList.contains('focus')
-    //     };
-    //     link.classList.remove('focus');
-    // });
-
-        const organizationResponse = await fetch(backendURL + "/api/mobile/organization", {
-            headers: {
-                Accept: "application/json",
-            },
+function setRoleAndPermission() {
+    if (localStorage.getItem("type") === "Hospital") {
+        let links = document.querySelectorAll(".HospitalLink");
+        links.forEach(link => {
+            link.classList.remove('d-none')
         });
-
-        const profileResponse = await fetch(backendURL + "/api/profile/show", {
-            headers: {
-                Accept: "application/json",
-                Authorization: "Bearer " + localStorage.getItem("token"),
-            },
+    } else {
+        let links = document.querySelectorAll(".BCLink");
+        links.forEach(link => {
+            link.classList.remove('d-none')
         });
-
-        const json_profile = await profileResponse.json();
-        const json_organization = await organizationResponse.json();
-
-        if (organizationResponse.ok && profileResponse.ok) {
-                for (let index = 0; index < json_organization.length; index++) {
-                    if(json_profile.id === json_organization[index].user_id || json_profile.user_id === json_organization[index].user_id){
-                        if (localStorage.getItem("type") === "Hospital") {
-                            let links = document.querySelectorAll(".HospitalLink");
-                            links.forEach(link => {
-                                link.classList.remove('d-none')
-                            });
-                        } else {
-                            let links = document.querySelectorAll(".BCLink");
-                            links.forEach(link => {
-                                link.classList.remove('d-none')
-                            });
-                        }
-                        break;
-                    }
-                }
-            }
-
-        // navLinks.forEach((link, index) => {
-        //     link.innerHTML = originalContent[index];
-        //     if (elementsState[index].hasFocus) {
-        //         link.classList.add('focus');
-        //     }
-        //     link.classList.remove('disabled');
-        // });
+    }
 }
 
 function displayToastMessage(type) {
@@ -273,7 +206,7 @@ function displayToastMessage(type) {
             toastType = 'bg-success';
             break;
         case 'update-fail':
-            message = 'Failed to update. Please try again.';
+            message = 'Failed to update. Please reload and try again.';
             toastType = 'bg-danger';
             break;
         case 'create-success':
@@ -281,7 +214,7 @@ function displayToastMessage(type) {
             toastType = 'bg-success';
             break;
         case 'create-fail':
-            message = 'Failed to create. Please try again.';
+            message = 'Failed to create. Please reload and try again.';
             toastType = 'bg-danger';
             break;
         case 'delete-success':
@@ -289,7 +222,7 @@ function displayToastMessage(type) {
             toastType = 'bg-success';
             break;
         case 'delete-fail':
-            message = 'Failed to delete. Please try again.';
+            message = 'Failed to delete. Please reload and try again.';
             toastType = 'bg-danger';
             break;
         default:
@@ -331,13 +264,7 @@ function displayToastMessage(type) {
 async function getPendingRequest() {
     const getTotalPendingRequest = document.getElementById("getTotalPendingRequest");
 
-    const requestResponse = await fetch(backendURL + "/api/bloodrequest/all", {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    });
-    
+    const requestResponse = await fetch(backendURL + "/api/bloodrequest/all", { headers });
     const json_request = await requestResponse.json();
 
     let pendingRequest = 0;
@@ -348,7 +275,7 @@ async function getPendingRequest() {
     })
 
     getTotalPendingRequest.innerHTML = `<span class="position-absolute top-50 translate-middle badge bg-danger" style="right: 0px">
-                  <span>${pendingRequest}</span><span class="visually-hidden">unread messages</span></span>`;
+    <span>${pendingRequest}</span><span class="visually-hidden">unread messages</span></span>`;
 }
 
 export { backendURL, logout, userlogged, checkOrgInfoStatus, jsonToCSV, setRoleAndPermission, formatTimeDifference, hasThreeMinutesPassed, formatDateDifference, displayToastMessage, getPendingRequest} 
