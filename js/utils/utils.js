@@ -267,6 +267,8 @@ async function getPendingRequest() {
     const requestResponse = await fetch(backendURL + "/api/bloodrequest/all", { headers });
     const json_request = await requestResponse.json();
 
+    console.log(json_request);
+
     let pendingRequest = 0;
     json_request.forEach((request) =>{
       if(request.status === "Pending"){

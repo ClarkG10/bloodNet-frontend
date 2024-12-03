@@ -204,12 +204,12 @@ function createStaffHTML(staff, json_profile) {
 function getAddUserButton(){
   return  `<button
             class="bloodCompatibilityChecker px-3 py-1"
-            style="right: 37px; bottom: 668px; background-color: #b43929"
+            style="right: 30px;background-color: #b43929"
             type="button"
             data-bs-toggle="modal"
             data-bs-target="#createUserModal"
           >
-            Add new user
+            Add New User
           </button>`
 }
 

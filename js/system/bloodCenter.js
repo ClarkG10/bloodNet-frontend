@@ -79,7 +79,7 @@ async function getDatas(stockRequest = {}) {
             });
         });
     } catch (error) {
-        displayToastMessage("Error fetching data: " + error.message, "error");
+        console.log("Error fetching data: " + error.message, "error");
     }
 }
 
@@ -180,7 +180,7 @@ request_filter_form.onsubmit = async (e) => {
 
 async function requestBlood(data, button) {
     button.disabled = true;
-    button.innerHTML = `<span class="spinner-border spinner-border-sm"          aria-hidden="true"></span><span class="visually-hidden" role="status">Loading...</span>`;
+    button.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span class="visually-hidden" role="status">Loading...</span>`;
 
     console.log(data);
     const formData = new FormData();
@@ -196,16 +196,16 @@ async function requestBlood(data, button) {
         const response = await fetch(backendURL + "/api/bloodrequest", {
             method: "POST", headers, body: formData
         });
-        const jsonRequest = await response.json();
+        const json_request = await response.json();
 
         if (response.ok) {
             displayToastMessage("create-success");
         } else {
             displayToastMessage("create-fail");
-            console.log(jsonRequest.message);
+            console.log("Request failed:", json_request.message);
         }
     } catch (error) {
-        displayToastMessage(`Error: ${error.message}`, "error");
+        console.log(`Error: ${error.message}`, "error");
     } finally {
         button.disabled = false;
         button.innerHTML = "Request";

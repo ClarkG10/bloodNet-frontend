@@ -2,19 +2,13 @@ import { backendURL, logout, jsonToCSV, formatTimeDifference, hasThreeMinutesPas
 
 logout();
 getDatas();
-
-const orgType = localStorage.getItem("type");
-
-if(orgType == "Blood Center") {
-  getPendingRequest(); 
-}
+getPendingRequest(); 
 
 const headers = {
   Accept: "application/json",
   Authorization: "Bearer " + localStorage.getItem("token"),
 };
 
-if (orgType === "Blood Center") {
     const generateReportButton = document.getElementById("generateRequestReport");
 
     generateReportButton.onclick = async () => {
@@ -38,7 +32,6 @@ function downloadCSV(csvData, filename) {
     a.click();
     document.body.removeChild(a);
   }
-}
 
 document.getElementById('sortUrgencyScale').addEventListener('change', function () {
     getDatas(this.value);
@@ -48,20 +41,30 @@ const get_request = document.getElementById("get_request");
 
 get_request.innerHTML = `
     <div class="d-flex has-head shadow-sm">
-        <div class="has-body" style="width: 250px"><span class="spinner-border" role="status"></span></div>
-        ${'<div class="has-body"><span class="spinner-border" role="status"></span></div>'.repeat(7)}
+    <div class="has-body" style="width: 350px"><span class="spinner-border" role="status"></span></div>
+    <div class="has-body"><span class="spinner-border" role="status"></span></div>
+    <div class="has-body"><span class="spinner-border" role="status"></span></div>
+    <div class="has-body"><span class="spinner-border" role="status"></span></div>
+    <div class="has-body"><span class="spinner-border" role="status"></span></div>
+    <div class="has-body"><span class="spinner-border" role="status"></span></div>
+    <div class="has-body"><span class="spinner-border" role="status"></span></div>
+    <div class="has-body" style="width: 252px"><span class="spinner-border" role="status"></span></div>
     </div>
 `;
 
 async function getDatas(filteredUrgencyScale = "All", url = "", keyword = "") {
-    const headers = {
-        Accept: "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-    };
-    let queryParams = "?" + (keyword ? "keyword=" + encodeURIComponent(keyword) + "&" : "");
+  const headers = {
+    Accept: "application/json",
+    Authorization: "Bearer " + localStorage.getItem("token"),
+  };
+
+  let queryParams = 
+  "?" + 
+  (url ? new URL(url).searchParams + "&" : "") + 
+  (keyword ? "keyword=" + encodeURIComponent(keyword) : "");
 
     const [requestResponse, inventoryResponse, organizationAll, reserveBloodResponse] = await Promise.all([
-      await fetch(url || backendURL + "/api/bloodrequest/all" + queryParams, { headers }),
+      await fetch(url || backendURL + "/api/bloodrequest" + queryParams, { headers }),
       await fetch(backendURL + "/api/mobile/inventory", { headers }),
       await fetch(backendURL + "/api/mobile/organization", { headers }),
       await fetch(backendURL + "/api/all/reserveblood", { headers })
@@ -76,19 +79,20 @@ async function getDatas(filteredUrgencyScale = "All", url = "", keyword = "") {
 
     let hasRequest = false, requests = "";
 
+    console.log(json_request)
 
     const filteredRequest = filteredUrgencyScale === 'All'
-        ? json_request
-        : json_request.filter(request => request.urgency_scale === filteredUrgencyScale);
+        ? json_request.data
+        : json_request.data.filter(request => request.urgency_scale === filteredUrgencyScale);
 
     filteredRequest.forEach((request) => {
             hasRequest = true;
             const requestOrg = json_organizationAll.find(org => org.user_id === request.user_id);
-            const receiverOrg = json_organizationAll.find(org => org.org_id === request.receiver_id);
-            const updateButtonVisible = hasThreeMinutesPassed(request.created_at);
+            const updateButtonVisible = hasThreeMinutesPassed(request.updated_at);
+            const orgType = localStorage.getItem("type");
             const viewStocks = orgType == "Blood Center" ? `data-bs-toggle="modal" data-bs-target="#viewStocks_${request.request_id}"` : ``;
 
-            requests += requestHTML(json_inventory, request, requestOrg, receiverOrg, orgType, updateButtonVisible, viewStocks, json_reserveblood);
+            requests += requestHTML(json_inventory, request, requestOrg, orgType, updateButtonVisible, viewStocks, json_reserveblood);
     });
 
     if (!hasRequest) {
@@ -96,23 +100,35 @@ async function getDatas(filteredUrgencyScale = "All", url = "", keyword = "") {
     }
     get_request.innerHTML = requests;
 
+    let pagination = "";
+    if (json_request.links) {
+      json_request.links.forEach((link) => {
+            pagination += `
+                <li class="page-item" >
+                    <a class="page-link ${link.url == null ? " disabled" : ""}${link.active ? " active" : ""}" href="#" data-url="${link.url}" style="color: #b43929">
+                        ${link.label}
+                    </a>
+                </li>`;
+        });
+    }
+
     document.querySelectorAll(".updateStatusButton").forEach(button => {
         button.addEventListener("click", updateClickStatus);
     });
     document.querySelectorAll(".undoButton").forEach(button => {
       button.addEventListener("click", updateClickStatus);
   });
-    document.querySelectorAll(".deleteButton").forEach(button => {
-        button.addEventListener("click", deleteClick);
-    });
-    document.querySelectorAll(".updateRequest").forEach(button => {
-        button.addEventListener("click", updateRequestClick);
+
+    document.getElementById("pages").innerHTML = pagination;
+
+    document.querySelectorAll("#pages .page-link").forEach((link) => {
+    link.addEventListener("click", pageAction);
     });
 }
 
-function requestHTML(json_inventory, request, requestOrg, receiverOrg, orgType,  updateButtonVisible, viewStocks, json_reserveblood) {
+function requestHTML(json_inventory, request, requestOrg, orgType,  updateButtonVisible, viewStocks, json_reserveblood) {
     return `<div class="d-flex has-head shadow-sm">
-        <div class="has-body" ${viewStocks} style="width: 350px">${orgType === "Blood Center" ? requestOrg.org_name : receiverOrg.org_name}</div>
+        <div class="has-body" ${viewStocks} style="width: 350px">${requestOrg.org_name}</div>
         <div class="has-body" ${viewStocks}>${formatTimeDifference(request.created_at)}</div>
         <div class="has-body" ${viewStocks}>${request.blood_type}</div>
         <div class="has-body" ${viewStocks}>${request.component}</div>
@@ -125,12 +141,6 @@ function requestHTML(json_inventory, request, requestOrg, receiverOrg, orgType, 
         </div>
         <div class="has-body" style="width: 240px">
             <div class="d-flex justify-content-center">
-              <!-- Update button logic -->
-              ${updateButtonVisible || orgType !== "Hospital" ? `` : `
-                <button class="btn updateButton me-1" data-bs-toggle="modal" data-bs-target="#updateRequestModal_${request.request_id}">
-                  Update
-                </button>`}
-              
               <!-- Accept/Decline button logic -->
               ${request.status === "Pending" && orgType === "Blood Center" ? `
                   <input type="hidden" name="status" value="Accepted">
@@ -140,32 +150,14 @@ function requestHTML(json_inventory, request, requestOrg, receiverOrg, orgType, 
                   <button class="btn decline updateStatusButton" data-id="${request.request_id}" data-status="decline">Decline</button>` : ``}
               
               <!-- Undo button logic -->
-              ${!updateButtonVisible && request.status !== "Pending" ? `
+              ${!updateButtonVisible && request.status !== "Pending" && orgType !== "Hospital"? `
                 <button class="btn btn-outline-secondary undoButton" data-id="${request.request_id}" data-status="undo">Undo</button>` : ``}
             </div>
               
-            ${
-              orgType === "Hospital" ? `
-                <button
-                  class="bg-secondary-subtle deleteButton"
-                  style="
-                    cursor: pointer;
-                    padding: 5px !important;
-                    border-radius: 5px;
-                    border: none !important;
-                    padding-left: 12px !important;
-                    padding-right: 12px !important;
-                  "
-                  data-id="${request.request_id}"
-                >
-                  <img src="assets/icon/trash.png" alt="" width="15px" />
-                </button>` 
-              : ``}
           </div>
         </div>
     </div>
     
-    ${orgType === "Hospital" ? `${updateModalContent(request, receiverOrg)}` : ``}
     ${orgType === "Blood Center" ? `${viewStocksModal(request, requestOrg, json_inventory, json_reserveblood)}` : ``}
 `;
 }
@@ -182,116 +174,49 @@ function noRequestHTML(){
         </div>`
 }
 
-function updateModalContent(request, receiverOrg) {
-  return `<!-- Update Request Modal -->
-    <div class="modal fade" id="updateRequestModal_${request.request_id}" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="updateRequestModalLabel"><small>Requested to:</small> <br>${receiverOrg.org_name}</h5>
-          </div>
-          <div class="modal-body p-2">
-            <form id="request_form_${request.request_id}">
-              <div class="form-floating mb-3 mt-3">
-                <select class="form-select form-control" id="bloodTypes" name="blood_type">
-                  <option value="O-" ${request.blood_type === "O-" ? "selected" : ""}>O-</option>
-                  <option value="A-" ${request.blood_type === "A-" ? "selected" : ""}>A-</option>
-                  <option value="B-" ${request.blood_type === "B-" ? "selected" : ""}>B-</option>
-                  <option value="AB-" ${request.blood_type === "AB-" ? "selected" : ""}>AB-</option>
-                  <option value="O+" ${request.blood_type === "O+" ? "selected" : ""}>O+</option>
-                  <option value="A+" ${request.blood_type === "A+" ? "selected" : ""}>A+</option>
-                  <option value="B+" ${request.blood_type === "B+" ? "selected" : ""}>B+</option>
-                  <option value="AB+" ${request.blood_type === "AB+" ? "selected" : ""}>AB+</option>
-                </select>
-                <label for="blood_type">Blood Type</label>
-              </div>
-              <div class="form-floating mb-3">
-                <select class="form-select form-control" id="component" name="component" required>
-                  <option value="Whole Blood" ${request.component === "Whole Blood" ? "selected" : ""}>Whole Blood</option>
-                  <option value="Red Blood Cells" ${request.component === "Red Blood Cells" ? "selected" : ""}>Red Blood Cells</option>
-                  <option value="White Blood Cells" ${request.component === "White Blood Cells" ? "selected" : ""}>White Blood Cells</option>
-                  <option value="Platelets" ${request.component === "Platelets" ? "selected" : ""}>Platelets</option>
-                  <option value="Plasma" ${request.component === "Plasma" ? "selected" : ""}>Plasma</option>
-                  <option value="Cryoprecipitate" ${request.component === "Cryoprecipitate" ? "selected" : ""}>Cryoprecipitate</option>
-                  <option value="Granulocytes" ${request.component === "Granulocytes" ? "selected" : ""}>Granulocytes</option>
-                </select>
-                <label for="component">Components</label>
-              </div>
-              <div class="form-floating mb-3">
-                <select class="form-select form-control" id="urgency_scale" name="urgency_scale" required>
-                  <option value="Routine" ${request.urgency_scale === "Routine" ? "selected" : ""}>Routine</option>
-                  <option value="Non-urgent" ${request.urgency_scale === "Non-urgent" ? "selected" : ""}>Non-urgent</option>
-                  <option value="Urgent" ${request.urgency_scale === "Urgent" ? "selected" : ""}>Urgent</option>
-                  <option value="Critical" ${request.urgency_scale === "Critical" ? "selected" : ""}>Critical</option>
-                </select>
-                <label for="urgency_scale">Urgency Scale</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Units" value="${request.quantity}" />
-                <label for="quantity">Units</label>
-              </div>
-              <hr />
-              <div class="d-flex align-items-end justify-content-end">
-                <button type="submit" class="button1 me-2 updateRequest justify-content-center" style="font-size: 16px" data-id="${request.request_id}">
-                  Update
-                </button>
-                <button type="button" class="buttonBack modal_close" data-bs-dismiss="modal" style="font-size: 16px">
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Update Request Modal -->
-`
-}
-
-function viewStocksModal(request, requestOrg, json_inventory, json_reserveblood){
+function viewStocksModal(request, requestOrg, json_inventory, json_reserveblood) {
   return `<!-- View stocks Modal -->
     <div class="modal fade" id="viewStocks_${request.request_id}" tabindex="-1" aria-labelledby="viewStockModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="viewStockModalLabel">${requestOrg.org_name}</h5>
             <button type="button" class="btn-close me-1" data-bs-dismiss="modal" aria-label="Close" style="box-shadow: none"></button>
           </div>
           <div class="modal-body font-size">
-              <div class="d-flex">
-                <span class="fw-bold font-size d-flex ms-2">
-                  Available stocks</span
-                >
+            <div class="row">
+
+              <!-- Available Stocks Section -->
+              <div class="col-6">
+                <div class="d-flex">
+                  <span class="fw-bold font-size d-flex ms-2">Remaining Stocks</span>
+                </div>
+                <div class="d-flex shadow-sm mt-1 bg-secondary" style="font-weight: bold; color: white; border-radius: 10px">
+                  <div class="has-body flex-grow-1">Blood type</div>
+                  <div class="has-body flex-grow-1">Component</div>
+                  <div class="has-body flex-grow-1">Units</div>
+                </div>
+                ${getAvailStocks(json_inventory, request.user_id)}
               </div>
-            <div
-                class="d-flex shadow-sm mt-2 bg-secondary"
-                style="font-weight: bold; color: white; border-radius: 10px"
-              >
-                <div class="has-body flex-grow-1">Blood type</div>
-                <div class="has-body flex-grow-1">Component</div>
-                <div class="has-body flex-grow-1">Units</div>
+
+              <!-- Available Reserve Stocks Section -->
+              <div class="col-6">
+                <div class="d-flex">
+                  <span class="fw-bold font-size d-flex ms-2">Remaining Reserve Stocks</span>
+                </div>
+                <div class="d-flex shadow-sm mt-1 bg-secondary" style="font-weight: bold; color: white; border-radius: 10px">
+                  <div class="has-body flex-grow-1">Blood type</div>
+                  <div class="has-body flex-grow-1">Component</div>
+                  <div class="has-body flex-grow-1">Units</div>
+                </div>
+                ${getAvailStocks(json_reserveblood, request.user_id)}
               </div>
-              ${getAvailStocks(json_inventory, request.user_id)}
-            <div class="d-flex mt-3">
-                <span class="fw-bold font-size d-flex ms-2">
-                  Available Reserve stocks</span
-                >
-              </div>
-            <div
-                class="d-flex shadow-sm mt-2 bg-secondary"
-                style="font-weight: bold; color: white; border-radius: 10px"
-              >
-                <div class="has-body flex-grow-1">Blood type</div>
-                <div class="has-body flex-grow-1">Component</div>
-                <div class="has-body flex-grow-1">Units</div>
-              </div>
-              ${getAvailStocks(json_reserveblood, request.user_id)}
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- View stocks Modal -->`
+    <!-- View stocks Modal -->`;
 }
 
 function getAvailStocks(inventory, org_id) {
@@ -318,6 +243,13 @@ function getAvailStocks(inventory, org_id) {
     }
     return stocks;
   }
+
+const pageAction = async (e) => {
+    e.preventDefault();
+    const url = e.target.getAttribute("data-url");
+    await getDatas('All', url);
+  }
+  
 
 const request_search_form = document.getElementById("search_form");
 request_search_form.onsubmit = async (e) => {
@@ -355,12 +287,7 @@ async function updateRequestStatus(id, status) {
       formData.append("_method", "PUT");
       try {
           const response = await fetch(backendURL + "/api/bloodrequest/status/" + id, {
-              method: "POST",
-              headers: {
-                  Accept: "application/json",
-                  Authorization: Bearer + localStorage.getItem("token"),
-              },
-              body: formData,
+              method: "POST", headers, body: formData,
           });
 
           const responseData = await response.json();
@@ -381,60 +308,3 @@ async function updateRequestStatus(id, status) {
       }
   }
 }
-
-function updateRequestClick(e) {
-  const request_id = e.target.getAttribute("data-id");
-  updateRequest(request_id);
-}
-
-async function updateRequest(id) {
-      const status_form = document.getElementById("request_form_" + id);
-
-      if (!status_form) return;
-
-      status_form.onsubmit = async (e) => {
-          e.preventDefault();
-
-          const formData = new FormData(status_form);
-          formData.append("_method", "PUT");
-
-          const requestResponse = await fetch(backendURL + "/api/bloodrequest/" + id, {
-              method: "POST", headers, body: formData,
-          });
-
-          const json_request = await requestResponse.json();
-
-          if (requestResponse.ok) {
-              displayToastMessage("update-success");
-              document.querySelector(`#updateRequestModal_${id} .modal_close`).click();
-              await getDatas();
-          } else {
-              displayToastMessage("update-fail");
-              console.error("Update failed:", json_request.message);
-          }
-      }
-  }
-
-async function deleteRequest(id) {
-  if (confirm("Are you sure you want to delete this item?")) {
-      const requestResponse = await fetch(backendURL + "/api/bloodrequest/" + id, {
-          method: "DELETE", headers });
-
-      const json_request = await requestResponse.json();
-
-      if (requestResponse.ok) {
-          displayToastMessage("delete-success");
-          await getDatas();
-      } else {
-          displayToastMessage("delete-fail");
-          console.error("Delete failed:", json_request.message);
-      }
-  }
-}
-
-function deleteClick(e) {
-    const request_id = e.currentTarget.getAttribute('data-id');
-    console.log(request_id);
-    deleteRequest(request_id);
-}
-

@@ -14,15 +14,16 @@ const elements = [
 "get_requests",
 "lowStock",
 "lineChartLoader",
+"getTotalReserveUnits",
 ].map(id => document.getElementById(id));
 
 elements.forEach(element => element.innerHTML = placeholders);
 
 async function getDatas() {
     const [
-        inventoryResponse, requestResponse, stockInResponse, stockOutResponse, profileResponse, organizationResponseAll] = await Promise.all([
+        inventoryResponse, requestResponse, stockInResponse, stockOutResponse, profileResponse, organizationResponseAll, reservebloodResponse] = await Promise.all([
         fetchData("/api/inventory/all"), fetchData("/api/bloodrequest/all"), fetchData("/api/stockIn"), fetchData("/api/stockOut"),
-         fetchData("/api/profile/show"), fetchData("/api/mobile/organization")
+         fetchData("/api/profile/show"), fetchData("/api/mobile/organization"), fetchData("/api/reserveblood/all"),
     ]);
 
     const json_inventory = await inventoryResponse.json();
@@ -31,12 +32,15 @@ async function getDatas() {
     const stockOutData = await stockOutResponse.json();
     const json_profile = await profileResponse.json();
     const json_organizationAll = await organizationResponseAll.json();
+    const json_reserveblood = await reservebloodResponse.json();
 
     handleRequests(json_request, json_organizationAll);
     handleStockAlerts(json_inventory);
 
     console.log(json_organizationAll)
     let totalUnits = json_inventory.reduce((sum, stock) => sum + parseInt(stock.avail_blood_units), 0);
+    let totalReserveUnits = json_reserveblood.reduce((sum, stock) => sum + parseInt(stock.avail_blood_units), 0);
+    
     let orgName = json_organizationAll.find(org => org.user_id === json_profile.id || org.user_id === json_profile.user_id);
     let matchCount = 0;
 
@@ -49,6 +53,7 @@ async function getDatas() {
     document.getElementById("getOrgName").innerHTML = `${orgName.org_name}`;
     elements[0].innerHTML = `<h4 class="fw-bold">${totalUnits}</h4>`;
     elements[1].innerHTML = `<h4 class="fw-bold">${matchCount}</h4>`;
+    elements[6].innerHTML = `<h4 class="fw-bold">${totalReserveUnits}</h4>`;
 
     if (stockInResponse.ok && stockOutResponse.ok && profileResponse.ok) {
         processChartData(stockInData, stockOutData, json_profile);

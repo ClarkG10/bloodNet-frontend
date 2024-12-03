@@ -524,7 +524,6 @@ async function getStocks() {
 
     const stockInData = await stockInResponse.json();
     const stockOutData = await stockOutResponse.json();
-    const profileData = await profileResponse.json();
 
     if(stockInResponse.ok && stockOutResponse.ok && profileResponse.ok){
 
@@ -534,7 +533,6 @@ async function getStocks() {
         let hasStock = false;
 
         combinedData.forEach(stocks => {
-            if(profileData.id == stocks.user_id || profileData.user_id == stocks.user_id){
                 if(stocks.reserveBlood_id !== 0){
             hasStock = true;
             stock += `<div
@@ -546,8 +544,7 @@ async function getStocks() {
                   <small class="d-flex justify-content-end">${formatDateDifference(stocks.created_at)}</small>
                 </div>`; 
             }
-         }
-        });
+         });
 
         if(!hasStock){
             stock = `<div class="text center py-2 px-3 mt-2">No History</div>`

@@ -260,7 +260,7 @@ blood_compatibility_form.onsubmit = async (e) => {
         let hasStocks = false;
         let hasDonor = false;
 
-        const isCompatible = (donor_blood, recipient_blood) => {
+        const isCompatible = (blood_stocks, recipient_blood) => {
             const compatibilityChart = {
                 "O-": ["O-"],
                 "O+": ["O-", "O+"],
@@ -271,7 +271,7 @@ blood_compatibility_form.onsubmit = async (e) => {
                 "AB-": ["AB-", "B-", "O-", "A-"],
                 "AB+": ["AB+", "AB-", "A-","A+","B+","B-","O-","O+",]
             };
-            return compatibilityChart[recipient_blood].includes(donor_blood);
+            return compatibilityChart[recipient_blood].includes(blood_stocks);
         };
 
         json_inventory.forEach(stock => { 

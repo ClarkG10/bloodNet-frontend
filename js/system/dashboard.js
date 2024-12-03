@@ -1,5 +1,4 @@
 import { backendURL, logout, formatTimeDifference, displayToastMessage, getPendingRequest, hasThreeMinutesPassed} from "../utils/utils.js";
-
 logout();
 getDatas();
 getPendingRequest();
@@ -17,19 +16,21 @@ const elements = [
 "get_events",
 "lowStock",
 "get_requests",
-"get_donors"
+"get_donors",
+"getTotalReserveUnits",
 ].map(id => document.getElementById(id));
 
 elements.forEach(element => element.innerHTML = placeholders);
 
 async function getDatas() {
-    const [profileResponse, organizationResponse, inventoryResponse, donorResponse, eventResponse, requestResponse] = await Promise.all([
+    const [profileResponse, organizationResponse, inventoryResponse, donorResponse, eventResponse, requestResponse, reserveBloodResponse] = await Promise.all([
         fetchData("/api/profile/show"),
         fetchData("/api/mobile/organization"),
         fetchData("/api/inventory/all"),
         fetchData("/api/donor/all"),
         fetchData("/api/event/all"),
         fetchData("/api/bloodrequest/all"),
+        fetchData("/api/reserveblood/all"),
     ]);
     const json_organization = await organizationResponse.json();
     const json_inventory = await inventoryResponse.json();
@@ -37,8 +38,13 @@ async function getDatas() {
     const json_request = await requestResponse.json();
     const json_donor = await donorResponse.json();
     const json_profile = await profileResponse.json();
+    const json_reserveblood = await reserveBloodResponse.json();
+
+    console.log(json_reserveblood)
     
     let totalUnits = json_inventory.reduce((sum, stock) => sum + parseInt(stock.avail_blood_units), 0);
+    let totalReserveUnits = json_reserveblood.reduce((sum, stock) => sum + parseInt(stock.avail_blood_units), 0);
+
     
     handleEvents(json_event);
     handleRequests(json_request, json_organization);
@@ -46,8 +52,10 @@ async function getDatas() {
     handleStockAlerts(json_inventory);
 
     let matchCount = 0;
-    let orgName = json_organization.find(org => org.user_id === json_profile.id || org.user_id === json_profile.user_id);
-    json_request.forEach(requests => {
+    let orgName = json_organization.find(org => {
+      return org.user_id === json_profile.id || org.user_id === json_profile.user_id;
+    });
+        json_request.forEach(requests => {
         if (requests.receiver_id === json_profile?.id || requests.receiver_id === json_profile?.user_id) {
             matchCount++;
         }
@@ -57,6 +65,8 @@ async function getDatas() {
     elements[1].innerHTML = `<h4 class="fw-bold">${json_event.length === "" ? 0 : json_event.length}</h4>`;
     elements[2].innerHTML = `<h4 class="fw-bold">${matchCount}</h4>`;
     elements[3].innerHTML = `<h4 class="fw-bold">${json_donor.length === "" ? 0 : json_donor.length}</h4>`;
+    elements[8].innerHTML = `<h4 class="fw-bold">${totalReserveUnits === ""? 0 : totalReserveUnits}</h4>`;
+
     function handleEvents(events) {
         let eventHTML = "";
         let hasEvents = events.some(event => event.status === "Scheduled");

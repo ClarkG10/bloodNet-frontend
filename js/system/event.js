@@ -147,6 +147,13 @@ function createEventHTML(event){
             <div class="event-hasevents fw-bold ${event.status == "Completed" ? `text-success` : event.status == "Cancelled" ? `text-danger`: ``}">${event.status}</div>
             <div class="event-hasevents">
               <div class="d-flex align-items-center justify-content-center">
+                <button
+                  class="btn updateButton1 me-1"
+                  data-bs-toggle="modal"
+                  data-bs-target="#viewEventModal_${event.event_id}"
+                >
+                  Details
+                </button>
               ${event.status == "Completed" || event.status == "Cancelled" ? 
                 `<button
                       class="bg-secondary-subtle deleteButton me-1 d-flex align-items-center justify-content-center"
@@ -163,7 +170,7 @@ function createEventHTML(event){
                     <img src="assets/icon/trash.png" alt="" width="16px" />
                   </button>`: 
                 `<button
-                  class="btn updateButton me-1"
+                  class="btn updateButton "
                   data-bs-toggle="modal"
                   data-bs-target="#updateEventModal_${event.event_id}"
                   data-id="${event.event_id}"
@@ -171,13 +178,6 @@ function createEventHTML(event){
                   Update
                 </button>`}
               
-                <button
-                  class="btn updateButton1"
-                  data-bs-toggle="modal"
-                  data-bs-target="#viewEventModal_${event.event_id}"
-                >
-                  Details
-                </button>
               </div>
             </div>
           </div>

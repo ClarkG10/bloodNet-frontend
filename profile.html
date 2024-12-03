@@ -13,6 +13,48 @@
     <script type="module" src="js/system/profile.js"></script>
     <title>Profile</title>
   </head>
+  <style>
+    /* Additional responsive styles */
+    @media screen and (min-width: 1540px) {
+      .fixed-sidebar {
+        width: 300px !important;
+      }
+      .content-area {
+        margin-left: 320px !important;
+      }
+      .profile {
+        width: 1500px !important;
+        height: 850px !important;
+      }
+      .logout {
+        margin-top: 170px !important;
+      }
+    }
+    /* For medium devices (768px to 1024px, tablets, small laptops) */
+    @media screen and (min-width: 1200px) and (max-width: 1400px) {
+      .fixed-sidebar {
+        width: 230px !important;
+      }
+      .content-area {
+        margin-left: 230px !important;
+      }
+      .profile {
+        width: 1110px !important;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1300px) {
+      .fixed-sidebar {
+        width: 210px !important;
+      }
+      .content-area {
+        margin-left: 210px !important;
+      }
+      .profile {
+        width: 990px !important;
+      }
+    }
+  </style>
   <body>
     <div id="loader"></div>
     <div class="row" id="hide">
@@ -138,9 +180,9 @@
         </div>
       </div>
       <div class="col-10 bg content-area">
-        <div class="container mt-4">
+        <div class="container-fluid mt-4">
           <div
-            class="bg-white p-4 ms-1 mt-3 mb-3 rounded-3 shadow-sm position-relative pt-4"
+            class="bg-white p-4 ms-1 mt-3 mb-3 rounded-3 shadow-sm position-relative pt-4 profile"
             style="width: 1216px; height: 680px; overflow: hidden"
           >
             <h4 class="fw-bold mb-3">Profile</h4>
@@ -165,4 +207,5 @@
       </div>
     </div>
   </body>
+  <script type="module" src="js/router/router.js"></script>
 </html>

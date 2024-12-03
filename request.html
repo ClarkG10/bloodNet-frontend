@@ -15,6 +15,61 @@
     <script type="module" src="js/system/request.js"></script>
     <title>Blood Request</title>
   </head>
+  <style>
+    /* Custom class for the tooltip */
+    .large-tooltip .tooltip-inner {
+      padding: 15px; /* Add extra padding */
+      max-width: 500px; /* Increase maximum width */
+      background-color: #c6310f; /* Optional: light background */
+      color: white; /* Optional: dark text */
+      text-align: left; /* Align text to the left */
+    }
+    /* Additional responsive styles */
+    @media screen and (min-width: 1540px) {
+      .fixed-sidebar {
+        width: 300px !important;
+      }
+      .content-area {
+        margin-left: 320px !important;
+      }
+      .requests {
+        width: 1500px !important;
+      }
+      .search {
+        width: 1420px !important;
+      }
+      .logout {
+        margin-top: 170px !important;
+      }
+    }
+    /* For medium devices (768px to 1024px, tablets, small laptops) */
+    @media screen and (min-width: 1200px) and (max-width: 1400px) {
+      .fixed-sidebar {
+        width: 230px !important;
+      }
+      .content-area {
+        margin-left: 230px !important;
+      }
+      .requests {
+        width: 1110px !important;
+      }
+      .search {
+        width: 1030px !important;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1300px) {
+      .fixed-sidebar {
+        width: 210px !important;
+      }
+      .content-area {
+        margin-left: 210px !important;
+      }
+      .requests {
+        width: 990px !important;
+      }
+    }
+  </style>
   <body>
     <div id="loader"></div>
     <div class="row" id="hide">
@@ -115,7 +170,7 @@
         </div>
       </div>
       <div class="col-10 bg content-area">
-        <div class="container mt-4">
+        <div class="container-fluid mt-4">
           <h4 class="fw-bold">Requests</h4>
           <span>Manage blood requests</span>
 
@@ -124,7 +179,7 @@
               <input
                 type="text"
                 placeholder="Search for blood type, components, or quantity"
-                class="me-2 py-2 ps-3"
+                class="me-2 py-2 ps-3 search"
                 style="
                   border: 2px #b43929 solid;
                   width: 1135px;
@@ -142,28 +197,36 @@
             </div>
           </form>
           <div
-            class="bg-white p-3 ms-1 mb-3 rounded-3 shadow-sm bg-white"
+            class="bg-white p-3 ms-1 mb-3 rounded-3 shadow-sm bg-white requests"
             style="width: 1216px"
           >
-            <div class="d-flex">
+            <div class="d-flex position-relative">
               <span class="fw-bold font-size d-flex mb-4 mt-1">
                 Manage Requests</span
               >
               <div
                 class="d-flex bg-white dropdown4 p-2 rounded-3 shadow-sm"
-                style="right: 200px"
+                style="right: 140px"
               >
                 <div>Sort by</div>
                 <div>
                   <select
                     class="form-select"
-                    aria-label=""
                     style="
                       border: none !important;
                       padding: 0px 33px 0px 5px;
                       box-shadow: none;
                     "
                     id="sortUrgencyScale"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-html="true"
+                    data-bs-custom-class="large-tooltip"
+                    title="
+                      <strong>Routine</strong>: No immediate requirement.<br>
+                      <strong>Non-urgent</strong>: Should be addressed soon.<br>
+                      <strong>Urgent</strong>: Requires immediate attention.<br>
+                      <strong>Critical</strong>: Life-threatening situation."
                   >
                     <option selected disabled>Urgency Scale</option>
                     <option value="All">All</option>
@@ -177,7 +240,7 @@
               <button
                 id="generateRequestReport"
                 class="generateReport bg-secondary"
-                style="right: 50px"
+                style="right: 0px"
               >
                 Generate Report
               </button>
@@ -204,7 +267,7 @@
               <!-- For Request -->
               <div
                 id="get_request"
-                style="min-height: 400px; max-height: 680px; overflow-y: scroll"
+                style="min-height: fit-content !important"
               ></div>
               <!-- For Request -->
             </div>
@@ -220,5 +283,17 @@
         </div>
       </div>
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      });
+    </script>
+    <script type="module" src="js/router/router.js"></script>
   </body>
 </html>

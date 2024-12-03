@@ -70,6 +70,27 @@ async function addNewDonation(id) {
             method: "POST", headers, body: formData,
         });
 
+        const donorResponse = await fetch(backendURL + "/api/donor/all", { headers });
+
+        const json_donors = await donorResponse.json();
+        const donor = json_donors.find((donor) => donor.donor_id === parseInt(formData.get("donor_id")));
+
+        const previousDonationDate = new Date(donor.previous_donation);
+        const newDonationDate = new Date(formData.get("donation_date"));
+
+        if (newDonationDate > previousDonationDate) {
+            console.log(newDonationDate);
+            console.log(formData.get("donation_date"));
+            formData.set("previous_donation", formData.get("donation_date"));
+            formData.append("_method", "PUT");
+
+            const donorDataResponse = await fetch(backendURL + "/api/donor/" + formData.get("donor_id"), { method:'POST', headers, body: formData });
+            if(!donorDataResponse.ok){
+                displayToastMessage("update-fail");
+                throw new Error ("Error Updating Previous Donation Field");
+            }
+        }
+        
         if (donationResponse.ok) {
             const inventoryResponse = await fetch(backendURL + "/api/inventory/all", { headers });
 
@@ -251,79 +272,90 @@ async function getDatas(url = "", keyword = ""){
         </div>
         
         <div class="modal fade" id="donorModal_${donor.donor_id}" tabindex="-1" aria-labelledby="donorModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="donorModalLabel">Donor's Details</h5>
                         <button type="button" class="btn" id="closeButton_${donor.donor_id}" data-bs-dismiss="modal">X</button>
                     </div>
                     <div class="modal-body font-size">
-                        <div class="d-flex justify-content-end">
-                            <button class="updateButton position-absolute" type="button" data-bs-toggle="collapse" data-bs-target="#addNewDonation_${donor.donor_id}">Add New Donation</button>
-                        </div>
-                        <div class="collapse mt-5" id="addNewDonation_${donor.donor_id}">
-                            <div class="card card-body">
-                                <form id="add_donation_form_${donor.donor_id}">
-                                    <input type="hidden" name="donor_id" value="${donor.donor_id}" />
-                                    <input type="hidden" name="user_id" value="${donor.user_id}" />
-                                    <input type="hidden" name="blood_type" value="${donor.blood_type}" />
-                                    <div class="form-floating mb-3">
-                                        <input type="number" class="form-control" id="units" placeholder="Units" name="units">
-                                        <label for="units">Units</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select form-control" id="component" name="component" required>
-                                            <option selected disabled>Select types of Component</option>
-                                            <option value="Whole Blood">Whole Blood</option>
-                                            <option value="Red Blood Cells">Red Blood Cells</option>
-                                            <option value="White Blood Cells">White Blood Cells</option>
-                                            <option value="Platelets">Platelets</option>
-                                            <option value="Plasma">Plasma</option>
-                                            <option value="Cryoprecipitate">Cryoprecipitate</option>
-                                            <option value="Granulocytes">Granulocytes</option>
-                                        </select>
-                                        <label for="component">Types of Components</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="donation_date" placeholder="Date of Donation" name="donation_date">
-                                        <label for="donation_date">Date of Donation</label>
-                                    </div>
-                                    <div class="d-flex">
-                                        <button type="submit" class="updateButton w-100 create_${donor.donor_id} addDonation" data-id="${donor.donor_id}">Submit</button>
-                                    </div>
-                                </form>
+                        <div class="row">
+                            <div class="col-5">
+                                <span><strong>Donor's Name: </strong>${donor.fullname}</span><br>
+                                <span><strong>Blood type: </strong>${donor.blood_type}</span><br>
+                                <span><strong>Date of birth: </strong>${donor.birthday}</span><br>
+                                <span><strong>Gender: </strong>${donor.gender}</span><br>
+                                <span><strong>Age: </strong>${donor.age}</span><br>
+                                <span><strong>Address: </strong>${donor.address}</span><br>
+                                <span><strong>Email Address: </strong>${donor.email_address}</span><br>
+                                <span><strong>Phone Number: </strong>${donor.phonenumber}</span><br>
+                                <span><strong>Medical History: </strong>${donor.medical_history}</span><br>
+                                <span><strong>Current Medications: </strong>${donor.current_medications}</span><br>
+                                <span><strong>Allergies: </strong>${donor.allergies}</span><br>
+                                <span><strong>Previous Donation: </strong>${donor.previous_donation}</span><br>
+                                <span><strong>Status: </strong><span class="${donor.status === 'Active' ? "text-success bg-secondary-subtle py-2 px-3 rounded-4" : "text-danger bg-secondary-subtle py-2 px-3 rounded-4"}">${donor.status}</span></span><br>
+                                <br>
+                                <span class="fw-bold" style="font-size: 18px; color: #b43929;">Emergency Contact</span><br>
+                                <span><strong>Name: </strong>${donor.emergency_name}</span><br>
+                                <span><strong>Relationship: </strong>${donor.emergency_relationship}</span><br>
+                                <span><strong>Phone Number: </strong>${donor.emergency_phonenumber}</span><br>
                             </div>
-                        </div>
-                        <span><strong>Donor's Name: </strong>${donor.fullname}</span><br>
-                        <span><strong>Blood type: </strong>${donor.blood_type}</span><br>
-                        <span><strong>Date of birth: </strong>${donor.birthday}</span><br>
-                        <span><strong>Gender: </strong>${donor.gender}</span><br>
-                        <span><strong>Age: </strong>${donor.age}</span><br>
-                        <span><strong>Address: </strong>${donor.address}</span><br>
-                        <span><strong>Email Address: </strong>${donor.email_address}</span><br>
-                        <span><strong>Phone Number: </strong>${donor.phonenumber}</span><br>
-                        <span><strong>Medical History: </strong>${donor.medical_history}</span><br>
-                        <span><strong>Current Medications: </strong>${donor.current_medications}</span><br>
-                        <span><strong>Allergies: </strong>${donor.allergies}</span><br>
-                        <span><strong>Previous Donation: </strong>${donor.previous_donation}</span><br>
-                        <span><strong>Status: </strong><span class="${donor.status === 'Active' ? "text-success bg-secondary-subtle py-2 px-3 rounded-4" : "text-danger bg-secondary-subtle py-2 px-3 rounded-4"}">${donor.status}</span></span><br>
-                        <br>
-                        <span class="fw-bold" style="font-size: 18px; color: #b43929;">Emergency Contact</span><br>
-                        <span><strong>Name: </strong>${donor.emergency_name}</span><br>
-                        <span><strong>Relationship: </strong>${donor.emergency_relationship}</span><br>
-                        <span><strong>Phone Number: </strong>${donor.emergency_phonenumber}</span><br>
-                        <br>
-                        <span class="fw-bold" style="font-size: 18px; color: #b43929;">Donation History</span><br>
-                        <div class="row mb-3 mt-1">
-                            <div class="col-md-3"><span class="opacity-50 fw-bold">Units</span></div>
-                            <div class="col-md-5"><span class="fw-bold opacity-50">Component</span></div>
-                            <div class="col-md-4 mb-1"><span class="fw-bold opacity-50">Date</span></div>
-                            ${getDonationHistory(donor.donor_id, json_donationHistory)}
+                            <div class="col-7">
+                                <div class="d-flex justify-content-end">
+                                    <button class="updateButton position-absolute" type="button" data-bs-toggle="collapse" data-bs-target="#addNewDonation_${donor.donor_id}">Add New Donation</button>
+                                </div>
+                                <div class="collapse mt-5" id="addNewDonation_${donor.donor_id}">
+                                    <div class="card card-body">
+                                        <form id="add_donation_form_${donor.donor_id}">
+                                            <input type="hidden" name="donor_id" value="${donor.donor_id}" />
+                                            <input type="hidden" name="user_id" value="${donor.user_id}" />
+                                            <input type="hidden" name="blood_type" value="${donor.blood_type}" />
+                                            <div class="form-floating mb-3">
+                                                <input type="number" class="form-control" id="units" placeholder="Units" name="units">
+                                                <label for="units">Units</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <select class="form-select form-control" id="component" name="component" required>
+                                                    <option selected disabled>Select types of Component</option>
+                                                    <option value="Whole Blood">Whole Blood</option>
+                                                    <option value="Red Blood Cells">Red Blood Cells</option>
+                                                    <option value="White Blood Cells">White Blood Cells</option>
+                                                    <option value="Platelets">Platelets</option>
+                                                    <option value="Plasma">Plasma</option>
+                                                    <option value="Cryoprecipitate">Cryoprecipitate</option>
+                                                    <option value="Granulocytes">Granulocytes</option>
+                                                </select>
+                                                <label for="component">Types of Components</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="date" class="form-control" id="donation_date" placeholder="Date of Donation" name="donation_date">
+                                                <label for="donation_date">Date of Donation</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="file" class="form-control" id="laboratory_attachment" name="laboratory_attachment">
+                                                <label for="laboratory_attachment">Laboratory Attachment</label>
+                                            </div>
+                                            <button type="submit" class="updateButton w-100 create_${donor.donor_id} addDonation" data-id="${donor.donor_id}">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                <span class="fw-bold" style="font-size: 18px; color: #b43929; margin-top: -20px !important">Donation History</span><br>
+                                <div class="row mb-3 mt-1" >
+                                    <div class="col-md-2"><span class="opacity-50">Units</span></div>
+                                    <div class="col-md-4"><span class="opacity-50">Component</span></div>
+                                    <div class="col-md-3"><span class="opacity-50">Date</span></div>
+                                    <div class="col-md-3"><span class="opacity-50">Lab Report</span></div>
+                                    ${getDonationHistory(donor.donor_id, json_donationHistory)}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>`;
+    
         
         };
         if(!hasDonor){
@@ -377,9 +409,14 @@ function getDonationHistory(donorId, json_donationHistory){
         if(donorId === donation.donor_id){
          hasDonationHistory = true;
          donationHistory += `
-                <div class="col-md-3">${donation.units}</div>
-                <div class="col-md-5">${donation.component}</div>
-                <div class="col-md-4">${donation.donation_date}</div>`;
+         <div class="col-md-2">${donation.units}</div>
+         <div class="col-md-4">${donation.component}</div>
+         <div class="col-md-3">${donation.donation_date}</div>
+         <div class="col-md-3">
+             <a href="${backendURL}/storage/${donation.laboratory_attachment}" target="_blank">
+                 View
+             </a>
+         </div>`;     
         }
     });
 

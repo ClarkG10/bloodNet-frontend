@@ -14,6 +14,53 @@
     <script type="module" src="js/system/user.js"></script>
     <title>Users</title>
   </head>
+  <style>
+    /* Additional responsive styles */
+    @media screen and (min-width: 1540px) {
+      .fixed-sidebar {
+        width: 300px !important;
+      }
+      .content-area {
+        margin-left: 320px !important;
+      }
+      .users {
+        width: 1500px !important;
+      }
+      .search {
+        width: 1420px !important;
+      }
+      .logout {
+        margin-top: 170px !important;
+      }
+    }
+    /* For medium devices (768px to 1024px, tablets, small laptops) */
+    @media screen and (min-width: 1200px) and (max-width: 1400px) {
+      .fixed-sidebar {
+        width: 230px !important;
+      }
+      .content-area {
+        margin-left: 230px !important;
+      }
+      .users {
+        width: 1110px !important;
+      }
+      .search {
+        width: 1030px !important;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1300px) {
+      .fixed-sidebar {
+        width: 210px !important;
+      }
+      .content-area {
+        margin-left: 210px !important;
+      }
+      .users {
+        width: 990px !important;
+      }
+    }
+  </style>
   <body>
     <div id="loader"></div>
     <div class="row" id="hide">
@@ -140,17 +187,16 @@
       </div>
 
       <div class="col-10 bg content-area">
-        <div class="container mt-4">
+        <div class="container-fluid mt-4">
           <h4 class="fw-bold">User Management</h4>
           <span>Manage users in your organization</span>
-          <div id="add_userButton"></div>
 
           <form id="search_form">
             <div class="d-flex mb-3 mt-2 ms-1 mt-4">
               <input
                 type="text"
                 placeholder="Search for name, or email"
-                class="me-2 py-2 ps-3"
+                class="me-2 py-2 ps-3 search"
                 style="
                   border: 2px #b43929 solid;
                   width: 1135px;
@@ -169,7 +215,7 @@
             </div>
           </form>
           <div
-            class="bg-white p-3 ms-1 mb-3 rounded-3 mt-3 shadow-sm bg-white"
+            class="bg-white p-3 ms-1 mb-3 rounded-3 mt-3 shadow-sm bg-white position-relative users"
             style="width: 1216px"
             card-size
           >
@@ -177,6 +223,7 @@
               <span class="fw-bold font-size d-flex ms-2 mb-2 mt-1">
                 Admins</span
               >
+              <div id="add_userButton"></div>
             </div>
 
             <div id="get_admin"></div>
@@ -184,7 +231,7 @@
           </div>
 
           <div
-            class="bg-white p-3 ms-1 mb-3 rounded-3 mt-3 shadow-sm bg-white"
+            class="bg-white p-3 ms-1 mb-3 rounded-3 mt-3 shadow-sm bg-white users"
             style="width: 1216px"
             card-size
           >
@@ -318,5 +365,6 @@
       </div>
     </div>
     <!-- Create New User Modal -->
+    <script type="module" src="js/router/router.js"></script>
   </body>
 </html>

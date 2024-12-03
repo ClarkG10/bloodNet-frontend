@@ -15,6 +15,53 @@
     <script type="module" src="js/system/event.js"></script>
     <title>Events</title>
   </head>
+  <style>
+    /* Additional responsive styles */
+    @media screen and (min-width: 1540px) {
+      .fixed-sidebar {
+        width: 300px !important;
+      }
+      .content-area {
+        margin-left: 320px !important;
+      }
+      .events {
+        width: 1500px !important;
+      }
+      .search {
+        width: 1420px !important;
+      }
+      .logout {
+        margin-top: 170px !important;
+      }
+    }
+    /* For medium devices (768px to 1024px, tablets, small laptops) */
+    @media screen and (min-width: 1200px) and (max-width: 1400px) {
+      .fixed-sidebar {
+        width: 230px !important;
+      }
+      .content-area {
+        margin-left: 230px !important;
+      }
+      .events {
+        width: 1110px !important;
+      }
+      .search {
+        width: 1030px !important;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1300px) {
+      .fixed-sidebar {
+        width: 210px !important;
+      }
+      .content-area {
+        margin-left: 210px !important;
+      }
+      .events {
+        width: 990px !important;
+      }
+    }
+  </style>
   <body style="overflow: hidden !important">
     <div id="loader"></div>
     <div class="row" id="hide">
@@ -113,7 +160,7 @@
         <br /><br /><br />
       </div>
       <div class="col-10 bg content-area">
-        <div class="container mt-4">
+        <div class="container-fluid mt-4">
           <h4 class="fw-bold">Blood Donation Events</h4>
           <span>Schedule and announce blood donation events</span>
 
@@ -122,7 +169,7 @@
               <input
                 type="text"
                 placeholder="Search for event name, location, or description"
-                class="me-2 py-2 ps-3"
+                class="me-2 py-2 ps-3 search"
                 style="
                   border: 2px #b43929 solid;
                   width: 1135px;
@@ -140,15 +187,18 @@
             </div>
           </form>
           <div
-            class="bg-white p-3 ms-1 mb-3 rounded-3 shadow-sm bg-white"
+            class="bg-white p-3 ms-1 mb-3 rounded-3 shadow-sm bg-white events"
             style="width: 1216px"
           >
-            <div class="d-flex">
+            <div class="d-flex position-relative">
               <span class="fw-bold font-size d-flex mb-4 mt-1">
                 Manage Events</span
               >
 
-              <div class="d-flex bg-white dropdown6 p-2 rounded-3 shadow-sm">
+              <div
+                class="d-flex bg-white dropdown6 p-2 rounded-3 shadow-sm"
+                style="right: 300px"
+              >
                 <div>Sort by</div>
                 <div>
                   <select
@@ -172,13 +222,14 @@
               <button
                 id="generateEventReport"
                 class="generateReport bg-secondary"
+                style="right: 160px"
               >
                 Generate Report
               </button>
 
               <button
                 class="createEvent"
-                style="cursor: pointer"
+                style="cursor: pointer; right: 0px"
                 data-bs-toggle="modal"
                 data-bs-target="#createEventModal"
               >
@@ -363,5 +414,6 @@
         </div>
       </div>
     </div>
+    <script type="module" src="js/router/router.js"></script>
   </body>
 </html>

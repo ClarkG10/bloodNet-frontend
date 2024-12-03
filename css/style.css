@@ -342,11 +342,16 @@ body {
     }
 }
 
-.card-container {
+.cardcontainer {
     position: relative;
     width: 292px !important;
+    max-height: 90px !important;
+}
+
+.card-container1 {
+    position: relative;
+    width: 230.5px !important;
     max-height: 100px !important;
-    /* overflow: hidden; */
 }
 
 .image-container {
@@ -581,7 +586,6 @@ body {
     border: none;
     padding: 25px 35px
 }
-
 
 .stockHistoryButton {
     text-decoration: none;

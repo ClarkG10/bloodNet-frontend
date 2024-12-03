@@ -13,6 +13,83 @@
     <script type="module" src="js/system/dashboard.js"></script>
     <title>Dashboard</title>
   </head>
+  <style>
+    /* Additional responsive styles */
+    @media screen and (min-width: 1540px) {
+      .fixed-sidebar {
+        width: 300px !important;
+      }
+      .content-area {
+        margin-left: 320px !important;
+      }
+      .card-container1 {
+        width: 287px !important;
+      }
+      .upcoming-events {
+        width: 1115px !important;
+      }
+      .alerts {
+        width: 367px !important;
+      }
+      .pending-requests {
+        width: 1500px !important;
+      }
+      .donors {
+        width: 1500px !important;
+      }
+      .logout {
+        margin-top: 170px !important;
+      }
+    }
+    /* For medium devices (768px to 1024px, tablets, small laptops) */
+    @media screen and (min-width: 1200px) and (max-width: 1400px) {
+      .fixed-sidebar {
+        width: 230px !important;
+      }
+      .content-area {
+        margin-left: 230px !important;
+      }
+      .card-container1 {
+        width: 209px !important;
+      }
+      .upcoming-events {
+        width: 827px !important;
+      }
+      .alerts {
+        width: 267px !important;
+      }
+      .pending-requests {
+        width: 1110px !important;
+      }
+      .donors {
+        width: 1110px !important;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1300px) {
+      .fixed-sidebar {
+        width: 210px !important;
+      }
+      .content-area {
+        margin-left: 210px !important;
+      }
+      .card-container1 {
+        width: 183px !important;
+      }
+      .upcoming-events {
+        width: 720px !important;
+      }
+      .alerts {
+        width: 245px !important;
+      }
+      .pending-requests {
+        width: 980px !important;
+      }
+      .donors {
+        width: 980px !important;
+      }
+    }
+  </style>
   <body>
     <div id="loader"></div>
     <div class="row" id="hide">
@@ -114,14 +191,14 @@
         </div>
       </div>
       <div class="col-10 bg content-area">
-        <div class="container mt-4">
+        <div class="container-fluid mt-4">
           <h4 class="fw-bold">Dashboard</h4>
           <span>Welcome Back,</span>
           <span id="getOrgName"></span>
 
           <div class="row mt-4 mb-3">
             <div
-              class="col-3 shadow-sm bg-white me-3 ms-3 p-3 rounded-3 card-container"
+              class="col-3 shadow-sm bg-white me-3 ms-3 p-3 rounded-3 card-container1"
             >
               <div class="d-flex mb-2">Total Blood Units</div>
               <h4 id="getTotalUnits"></h4>
@@ -134,7 +211,20 @@
               </div>
             </div>
             <div
-              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container"
+              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container1"
+            >
+              <div class="d-flex mb-2">Total Reserve Blood Units</div>
+              <h4 id="getTotalReserveUnits"></h4>
+              <div class="image-container">
+                <img
+                  src="assets/icon/w-inventory.png"
+                  alt="blood icon"
+                  width="30px"
+                />
+              </div>
+            </div>
+            <div
+              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container1"
             >
               <div class="d-flex mb-2">Total Events</div>
               <h4 id="getTotalEvents"></h4>
@@ -148,7 +238,7 @@
               </div>
             </div>
             <div
-              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container"
+              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container1"
             >
               <div class="d-flex mb-2">Total Requests</div>
               <h4 id="getTotalRequests"></h4>
@@ -161,7 +251,7 @@
               </div>
             </div>
             <div
-              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container"
+              class="col-3 shadow-sm bg-white me-3 p-3 rounded-3 card-container1"
             >
               <div class="d-flex mb-2">Total Donors</div>
               <h4 id="getTotalDonors"></h4>
@@ -176,24 +266,10 @@
           </div>
           <div class="row">
             <div
-              class="col-9 p-3 me-3 ms-3 rounded-3 shadow-sm bg-white"
+              class="col-9 p-3 me-3 ms-3 rounded-3 shadow-sm bg-white upcoming-events position-relative"
               style="width: 908px"
             >
-              <span class="fw-bold font-size d-flex"
-                >Upcoming Events
-                <div class="dropdown">
-                  <div data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="assets/icon/option.png" alt="" width="25px" />
-                  </div>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a href="event.html" class="dropdown-item" type="button"
-                        >More details</a
-                      >
-                    </li>
-                  </ul>
-                </div></span
-              >
+              <span class="fw-bold font-size d-flex">Upcoming Events </span>
               <div
                 class="d-flex event-head shadow-sm mt-2"
                 style="
@@ -213,12 +289,12 @@
               <div id="get_events"></div>
             </div>
             <div
-              class="col-3 bg-white p-3 rounded-3 shadow-sm position-relative"
+              class="col-3 bg-white p-3 rounded-3 shadow-sm position-relative alerts"
               style="width: 292px; height: 320px"
             >
-              <div class="">
+              <div>
                 <span
-                  class="fw-bold font-size d-flex position-absolute fixed-top pt-3 pb-2 px-3 bg-white"
+                  class="fw-bold font-size d-flex position-absolute fixed-top pt-3 pb-2 px-3 bg-white rounded-3"
                   >Alerts
                   <div class="dropdown1">
                     <div data-bs-toggle="dropdown" aria-expanded="false">
@@ -248,12 +324,12 @@
             </div>
           </div>
           <div
-            class="bg-white p-3 ms-1 mt-3 mb-3 rounded-3 shadow-sm bg-white"
+            class="bg-white p-3 ms-1 mt-3 mb-3 rounded-3 shadow-sm bg-white position-relative pending-requests"
             style="width: 1216px"
           >
             <h5 class="fw-bold font-size d-flex">
               Pending Requests
-              <div class="dropdown2">
+              <div class="dropdown2" style="right: 25px">
                 <div data-bs-toggle="dropdown" aria-expanded="false">
                   <img src="assets/icon/option.png" alt="" width="25px" />
                 </div>
@@ -287,13 +363,13 @@
             <div id="get_requests"></div>
           </div>
           <div
-            class="bg-white p-3 ms-1 rounded-3 mt-3 shadow-sm bg-white"
+            class="bg-white p-3 ms-1 rounded-3 mt-3 shadow-sm bg-white position-relative donors"
             style="width: 1216px"
           >
             <div class="d-flex">
               <span class="fw-bold font-size d-flex ms-2 mb-1">
                 List of Donors
-                <div class="dropdown2">
+                <div class="dropdown2" style="right: 25px">
                   <div data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="assets/icon/option.png" alt="" width="25px" />
                   </div>
@@ -330,5 +406,6 @@
         </div>
       </div>
     </div>
+    <script type="module" src="js/router/router.js"></script>
   </body>
 </html>

@@ -11,9 +11,59 @@
       rel="stylesheet"
     />
     <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="js/system/request.js"></script>
+    <script type="module" src="js/system/bloodRequest.js"></script>
     <title>Requests</title>
   </head>
+  <style>
+    /* Additional responsive styles */
+    @media screen and (min-width: 1540px) {
+      .fixed-sidebar {
+        width: 300px !important;
+      }
+      .content-area {
+        margin-left: 320px !important;
+      }
+      .requests {
+        width: 1500px !important;
+      }
+      .search {
+        width: 1420px !important;
+      }
+      .logout {
+        margin-top: 170px !important;
+      }
+    }
+    /* For medium devices (768px to 1024px, tablets, small laptops) */
+    @media screen and (min-width: 1200px) and (max-width: 1400px) {
+      .fixed-sidebar {
+        width: 230px !important;
+      }
+      .content-area {
+        margin-left: 230px !important;
+      }
+      .requests {
+        width: 1110px !important;
+      }
+      .search {
+        width: 1030px !important;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1300px) {
+      .fixed-sidebar {
+        width: 210px !important;
+      }
+      .content-area {
+        margin-left: 210px !important;
+      }
+      .requests {
+        width: 990px !important;
+      }
+      .search {
+        width: 910px !important;
+      }
+    }
+  </style>
   <body>
     <div id="loader"></div>
     <div class="row" id="hide">
@@ -102,7 +152,7 @@
         </div>
       </div>
       <div class="col-10 bg content-area">
-        <div class="container mt-4">
+        <div class="container-fluid mt-4">
           <h4 class="fw-bold">Requests</h4>
           <span>Manage blood requests</span>
           <form id="search_form">
@@ -110,7 +160,7 @@
               <input
                 type="text"
                 placeholder="Search for blood type, components, or quantity"
-                class="me-2 py-2 ps-3"
+                class="me-2 py-2 ps-3 search"
                 style="
                   border: 2px #b43929 solid;
                   width: 1135px;
@@ -128,16 +178,16 @@
             </div>
           </form>
           <div
-            class="bg-white p-3 ms-1 mb-3 rounded-3 shadow-sm bg-white"
+            class="bg-white p-3 ms-1 mb-3 rounded-3 shadow-sm bg-white requests"
             style="width: 1216px"
           >
-            <div class="d-flex">
+            <div class="d-flex position-relative">
               <span class="fw-bold font-size d-flex mb-4 mt-1">
                 List of Request</span
               >
               <div
                 class="d-flex bg-white dropdown4 p-2 rounded-3 shadow-sm"
-                style="right: 60px"
+                style="right: 0px"
               >
                 <div>Sort by</div>
                 <div>
@@ -182,7 +232,7 @@
             <!-- For Request -->
             <div
               id="get_request"
-              style="min-height: 400px; max-height: 680px; overflow-y: scroll"
+              style="min-height: fit-content !important"
             ></div>
             <!-- For Request -->
             <div
@@ -197,5 +247,6 @@
         </div>
       </div>
     </div>
+    <script type="module" src="js/router/router.js"></script>
   </body>
 </html>

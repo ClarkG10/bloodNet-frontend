@@ -22,6 +22,45 @@
       color: white; /* Optional: dark text */
       text-align: left; /* Align text to the left */
     }
+    /* Additional responsive styles */
+    @media screen and (min-width: 1540px) {
+      .fixed-sidebar {
+        width: 300px !important;
+      }
+      .content-area {
+        margin-left: 320px !important;
+      }
+      .bloodCenterRequest {
+        width: 1500px !important;
+      }
+      .logout {
+        margin-top: 170px !important;
+      }
+    }
+    /* For medium devices (768px to 1024px, tablets, small laptops) */
+    @media screen and (min-width: 1200px) and (max-width: 1400px) {
+      .fixed-sidebar {
+        width: 230px !important;
+      }
+      .content-area {
+        margin-left: 230px !important;
+      }
+      .bloodCenterRequest {
+        width: 1115px !important;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1300px) {
+      .fixed-sidebar {
+        width: 210px !important;
+      }
+      .content-area {
+        margin-left: 210px !important;
+      }
+      .bloodCenterRequest {
+        width: 990px !important;
+      }
+    }
   </style>
   <body>
     <div id="loader"></div>
@@ -111,121 +150,125 @@
         </div>
       </div>
       <div class="col-10 bg content-area">
-        <div class="container mt-4">
+        <div class="container-fluid mt-4">
           <h4 class="fw-bold">Blood Centers</h4>
           <span>Request blood from blood centers</span>
-        </div>
 
-        <form id="filter_form">
-          <div
-            class="ms-3 bg-white ps-2 pt-3 rounded-3 mt-3"
-            style="width: 1216px"
-          >
-            <div class="fw-bold ms-2 mb-2">
-              <span class="fs-6">Filters</span>
-            </div>
-            <div class="ms-1 row d-flex">
-              <div class="col-3" style="margin-right: -10px">
-                <div>
-                  <select
-                    class="form-select form-control"
-                    id="blood_type"
-                    name="blood_type"
-                    required
-                  >
-                    <option selected disabled>Select types of blood</option>
-                    <option value="O-">O-</option>
-                    <option value="O+">O+</option>
-                    <option value="A-">A-</option>
-                    <option value="A+">A+</option>
-                    <option value="B-">B-</option>
-                    <option value="B+">B+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="AB+">AB+</option>
-                  </select>
-                </div>
+          <form id="filter_form">
+            <div
+              class="bg-white ps-2 pt-3 rounded-3 mt-3 bloodCenterRequest"
+              style="width: 1216px"
+            >
+              <div class="fw-bold ms-2 mb-2">
+                <span class="fs-6">Filters</span>
               </div>
-              <div class="col-3">
-                <div style="margin-right: -10px">
-                  <select
-                    class="form-select form-control"
-                    id="component"
-                    name="component"
-                    required
-                  >
-                    <option selected disabled>Select types of Component</option>
-                    <option value="Whole Blood">Whole Blood</option>
-                    <option value="Red Blood Cells">Red Blood Cells</option>
-                    <option value="White Blood Cells">White Blood Cells</option>
-                    <option value="Platelets">Platelets</option>
-                    <option value="Plasma">Plasma</option>
-                    <option value="Cryoprecipitate">Cryoprecipitate</option>
-                    <option value="Granulocytes">Granulocytes</option>
-                  </select>
+              <div class="ms-1 row d-flex">
+                <div class="col-3" style="margin-right: -10px">
+                  <div>
+                    <select
+                      class="form-select form-control"
+                      id="blood_type"
+                      name="blood_type"
+                      required
+                    >
+                      <option selected disabled>Select types of blood</option>
+                      <option value="O-">O-</option>
+                      <option value="O+">O+</option>
+                      <option value="A-">A-</option>
+                      <option value="A+">A+</option>
+                      <option value="B-">B-</option>
+                      <option value="B+">B+</option>
+                      <option value="AB-">AB-</option>
+                      <option value="AB+">AB+</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="col-3">
-                <div class="mb-3" style="margin-right: -10px">
-                  <select
-                    class="form-select form-control"
-                    id="urgency_scale"
-                    name="urgency_scale"
-                    required
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-html="true"
-                    data-bs-custom-class="large-tooltip"
-                    title="
+                <div class="col-3">
+                  <div style="margin-right: -10px">
+                    <select
+                      class="form-select form-control"
+                      id="component"
+                      name="component"
+                      required
+                    >
+                      <option selected disabled>
+                        Select types of Component
+                      </option>
+                      <option value="Whole Blood">Whole Blood</option>
+                      <option value="Red Blood Cells">Red Blood Cells</option>
+                      <option value="White Blood Cells">
+                        White Blood Cells
+                      </option>
+                      <option value="Platelets">Platelets</option>
+                      <option value="Plasma">Plasma</option>
+                      <option value="Cryoprecipitate">Cryoprecipitate</option>
+                      <option value="Granulocytes">Granulocytes</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="mb-3" style="margin-right: -10px">
+                    <select
+                      class="form-select form-control"
+                      id="urgency_scale"
+                      name="urgency_scale"
+                      required
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-custom-class="large-tooltip"
+                      title="
         <strong>Routine</strong>: No immediate requirement.<br>
         <strong>Non-urgent</strong>: Should be addressed soon.<br>
         <strong>Urgent</strong>: Requires immediate attention.<br>
         <strong>Critical</strong>: Life-threatening situation."
-                  >
-                    <option selected disabled>Select Urgency Scale</option>
-                    <option value="Routine">Routine</option>
-                    <option value="Non-urgent">Non-urgent</option>
-                    <option value="Urgent">Urgent</option>
-                    <option value="Critical">Critical</option>
-                  </select>
+                    >
+                      <option selected disabled>Select Urgency Scale</option>
+                      <option value="Routine">Routine</option>
+                      <option value="Non-urgent">Non-urgent</option>
+                      <option value="Urgent">Urgent</option>
+                      <option value="Critical">Critical</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div style="width: 190px">
-                <div style="margin-right: -10px">
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="units"
-                    name="quantity"
-                    placeholder="Input blood units"
-                    required
-                  />
+                <div style="width: 190px">
+                  <div style="margin-right: -10px">
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="units"
+                      name="quantity"
+                      placeholder="Input blood units"
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
-              <div class="col-1" style="margin-top: 3px">
-                <button type="submit" class="updateButton">
-                  <img
-                    src="assets/icon/settings-sliders.png"
-                    alt=""
-                    width="15px"
-                    class="me-2"
-                  />
-                  Filter
-                </button>
+                <div class="col-1" style="margin-top: 3px">
+                  <button type="submit" class="updateButton">
+                    <img
+                      src="assets/icon/settings-sliders.png"
+                      alt=""
+                      width="15px"
+                      class="me-2"
+                    />
+                    Filter
+                  </button>
+                </div>
               </div>
             </div>
+          </form>
+          <div
+            class="bg-white p-3 mb-3 rounded-3 mt-3 shadow-sm bg-white bloodCenterRequest"
+            style="width: 1216px"
+            card-size
+          >
+            <div class="d-flex">
+              <span class="fw-bold font-size d-flex ms-2 mb-2 mt-1">
+                Search for Blood Center</span
+              >
+            </div>
+            <div id="get_bloodCenters"></div>
           </div>
-        </form>
-        <div
-          class="bg-white p-3 ms-1 mb-3 rounded-3 mt-3 shadow-sm bg-white ms-3"
-          style="width: 1216px"
-          card-size
-        >
-          <div class="d-flex">
-            <span class="fw-bold font-size d-flex ms-2 mb-2 mt-1">
-              Search for Blood Center</span
-            >
-          </div>
-          <div id="get_bloodCenters"></div>
         </div>
       </div>
     </div>
@@ -240,5 +283,6 @@
         });
       });
     </script>
+    <script type="module" src="js/router/router.js"></script>
   </body>
 </html>

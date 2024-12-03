@@ -15,6 +15,57 @@
     <script type="module" src="js/system/inventory.js" defer></script>
     <title>Blood Inventory</title>
   </head>
+  <style>
+    /* Additional responsive styles */
+    @media screen and (min-width: 1540px) {
+      .fixed-sidebar {
+        width: 300px !important;
+      }
+      .content-area {
+        margin-left: 320px !important;
+      }
+      .inventory {
+        width: 1215px !important;
+      }
+      .alerts {
+        width: 270px !important;
+      }
+      .logout {
+        margin-top: 170px !important;
+      }
+    }
+    /* For medium devices (768px to 1024px, tablets, small laptops) */
+    @media screen and (min-width: 1200px) and (max-width: 1400px) {
+      .fixed-sidebar {
+        width: 230px !important;
+      }
+      .content-area {
+        margin-left: 230px !important;
+      }
+      .inventory {
+        width: 830px !important;
+      }
+      .alerts {
+        width: 267px !important;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1300px) {
+      .fixed-sidebar {
+        width: 210px !important;
+      }
+      .content-area {
+        margin-left: 210px !important;
+      }
+      .inventory {
+        width: 980px !important;
+      }
+      .alerts {
+        width: 240px !important;
+        margin-top: 20px !important;
+      }
+    }
+  </style>
   <body>
     <div id="loader"></div>
     <div class="row" id="hide">
@@ -141,7 +192,7 @@
       </div>
 
       <div class="col-10 bg content-area">
-        <div class="container mt-4">
+        <div class="container-fluid mt-4">
           <h4 class="fw-bold">Blood Inventory</h4>
           <span>Manage blood supply</span>
           <br /><br />
@@ -179,7 +230,7 @@
           </div>
           <div class="row">
             <div
-              class="col-10 bg-white p-3 ms-3 rounded-3 shadow-sm"
+              class="col-10 bg-white p-3 ms-3 rounded-3 shadow-sm inventory"
               style="width: 950px; position: relative; height: fit-content"
             >
               <div class="d-flex">
@@ -266,7 +317,7 @@
               </div>
             </div>
             <div
-              class="col-2 bg-white p-3 ms-3 rounded-3 shadow-sm"
+              class="col-2 bg-white p-3 ms-3 rounded-3 shadow-sm alerts"
               style="width: 250px; position: relative; height: fit-content"
             >
               <span
@@ -542,5 +593,6 @@
         document.getElementById("donorCompatibility").classList.add("d-none");
       }
     </script>
+    <script type="module" src="js/router/router.js"></script>
   </body>
 </html>
