@@ -173,7 +173,7 @@
           </a>
         </div>
         <div class="d-none HospitalLink"><br /><br /></div>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <br /><br /><br /><br /><br /><br /><br /><br />
         <!-- logout -->
         <div class="logout d-none BCLink HospitalLink">
           <span
@@ -453,44 +453,18 @@
               <span class="fw-bold fs-5">Blood Compatibility Checker</span>
               <br />
             </div>
+            <!-- Trigger button for modal -->
             <button
               type="button"
-              id="popoverButton"
+              id="modalButton"
               style="
                 padding: 3px 7px 3px 7px;
                 background-color: #b43929;
                 border: 2px solid white !important;
                 border-radius: 50%;
               "
-              data-bs-toggle="popover"
-              data-bs-html="true"
-              data-bs-content="
-          <strong>O Positive:</strong><br>
-          Can give to: O+, A+, B+, AB+<br>
-          Can receive from: O+, O-<br><br>
-          <strong>A Positive:</strong><br>
-          Can give to: A+, AB+<br>
-          Can receive from: A+, A-, O+, O-<br><br>
-          <strong>B Positive:</strong><br>
-          Can give to: B+, AB+<br>
-          Can receive from: B+, B-, O+, O-<br><br>
-          <strong>AB Positive:</strong><br>
-          Can give to: AB+ only<br>
-          Can receive from: All blood types<br><br>
-          <strong>O Negative:</strong><br>
-          Can give to: All blood types<br>
-          Can receive from: O-<br><br>
-          <strong>A Negative:</strong><br>
-          Can give to: A-, A+, AB-, AB+<br>
-          Can receive from: A-, O-<br><br>
-          <strong>B Negative:</strong><br>
-          Can give to: B-, B+, AB-, AB+<br>
-          Can receive from: B-, O-<br><br>
-          <strong>AB Negative:</strong><br>
-          Can give to: AB-, AB+<br>
-          Can receive from: AB-, A-, B-, O-
-          "
-              title="Blood Type Compatibility"
+              data-bs-toggle="modal"
+              data-bs-target="#compatibilityModal"
             >
               <img
                 src="assets/icon/question-sign (1).png"
@@ -517,7 +491,17 @@
                     <option value="AB-">AB-</option>
                     <option value="AB+">AB+</option>
                   </select>
-                  <label for="blood_type">Blood Type (Recipient)</label>
+                  <label for="blood_type">Select blood type</label>
+                </div>
+                <div
+                  class="form-floating mb-3 flex-grow-1 me-2"
+                  style="width: fit-content"
+                >
+                  <select class="form-select" id="action" name="action">
+                    <option value="donate">Donate</option>
+                    <option value="receive">Receive</option>
+                  </select>
+                  <label for="blood_type">Select action</label>
                 </div>
                 <div>
                   <button
@@ -575,6 +559,68 @@
               >
                 Close
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal -->
+    <div
+      class="modal fade"
+      id="compatibilityModal"
+      tabindex="-1"
+      aria-labelledby="compatibilityModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="compatibilityModalLabel">
+              Blood Type Compatibility
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-12"></div>
+              <div class="col-12"></div>
+            </div>
+
+            <div class="row">
+              <h5>Donation</h5>
+
+              <div class="col-12" style="border-radius: 5px">
+                <strong>Red Blood Cells:</strong><br />
+                <strong>O-</strong>: Can donate to: O-, O+, A-, A+, B-, B+, AB-,
+                AB+<br />
+                <strong>O+</strong>: Can donate to: O+, A+, B+, AB+<br />
+                <strong>A-</strong>: Can donate to: A-, A+, AB-, AB+<br />
+                <strong>A+</strong>: Can donate to: A+, AB+<br />
+                <strong>B-</strong>: Can donate to: B-, B+, AB-, AB+<br />
+                <strong>B+</strong>: Can donate to: B+, AB+<br />
+                <strong>AB-</strong>: Can donate to: AB-, AB+<br />
+                <strong>AB+</strong>: Can donate to: AB+
+              </div>
+              <h5 class="mt-4">Receive</h5>
+
+              <div class="col-12" style="border-radius: 5px">
+                <strong>Red Blood Cells:</strong><br />
+                <strong>O-</strong>: Can receive from: O-<br />
+                <strong>O+</strong>: Can receive from: O-, O+<br />
+                <strong>A-</strong>: Can receive from: A-, O-<br />
+                <strong>A+</strong>: Can receive from: A+, A-, O+, O-<br />
+                <strong>B-</strong>: Can receive from: B-, O-<br />
+                <strong>B+</strong>: Can receive from: B+, B-, O+, O-<br />
+                <strong>AB-</strong>: Can receive from: AB-, B-, O-, A-<br />
+                <strong>AB+</strong>: Can receive from: All blood types (O+, O-,
+                A+, A-, B+, B-, AB+, AB-)
+              </div>
             </div>
           </div>
         </div>

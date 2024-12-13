@@ -240,69 +240,88 @@ blood_compatibility_form.onsubmit = async (e) => {
     e.preventDefault();
 
     const placeholder = `<div class="d-flex shadow-sm">
-          <div class="no-body flex-grow-1 my-2"><span class="spinner-border" role="status"></span></div></div>`
+            <div class="no-body flex-grow-1 my-2"><span class="spinner-border" role="status"></span></div></div>`;
 
     getInventory.innerHTML = placeholder;
     getDonor.innerHTML = placeholder;
 
     const formData = new FormData(blood_compatibility_form); 
     const recipient_blood = formData.get("blood_type");
+    const action = formData.get("action");
 
-    const inventoryResponse = await fetch(backendURL + "/api/inventory/all", { headers });
-    const donorResponse = await fetch(backendURL + "/api/donor/all", { headers });
+        const inventoryResponse = await fetch(backendURL + "/api/inventory/all", { headers });
+        const donorResponse = await fetch(backendURL + "/api/donor/all", { headers });
 
-    const json_inventory = await inventoryResponse.json();
-    const json_donor = await donorResponse.json();
+        if (!inventoryResponse.ok || !donorResponse.ok) {
+            throw new Error("Failed to fetch data");
+        }
 
-    if (inventoryResponse.ok && donorResponse.ok) {
+        const json_inventory = await inventoryResponse.json();
+        const json_donor = await donorResponse.json();
+
         let stocks = "";
         let donors = "";
         let hasStocks = false;
         let hasDonor = false;
 
-        const isCompatible = (blood_stocks, recipient_blood) => {
-            const compatibilityChart = {
+        const compatibilityChart = {
+            donate: {
+                "O-": ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
+                "O+": ["O+", "A+", "B+", "AB+"],
+                "A-": ["A-", "A+", "AB-", "AB+"],
+                "A+": ["A+", "AB+"],
+                "B-": ["B-", "B+", "AB-", "AB+"],
+                "B+": ["B+", "AB+"],
+                "AB-": ["AB-", "AB+"],
+                "AB+": ["AB+"]
+            },
+            receive: {
                 "O-": ["O-"],
                 "O+": ["O-", "O+"],
                 "A-": ["A-", "O-"],
-                "A+": ["A+", "A-", "O-", "O+"],
+                "A+": ["A+", "A-", "O+", "O-"],
                 "B-": ["B-", "O-"],
-                "B+": ["B+", "B-",  "O-", "O+"],
+                "B+": ["B+", "B-", "O+", "O-"],
                 "AB-": ["AB-", "B-", "O-", "A-"],
-                "AB+": ["AB+", "AB-", "A-","A+","B+","B-","O-","O+",]
-            };
-            return compatibilityChart[recipient_blood].includes(blood_stocks);
+                "AB+": ["AB+", "AB-", "A+", "A-", "B+", "B-", "O+", "O-"]
+            }
         };
 
-        json_inventory.forEach(stock => { 
+        const isCompatible = (bloodType, recipientBlood, action) => {
+            if (!compatibilityChart[action]) return false;
+            return compatibilityChart[action][recipientBlood]?.includes(bloodType);
+        };
+
+        json_inventory.forEach(stock => {
             let blood_type = stock.blood_type + stock.rh_factor;
-            if (isCompatible(blood_type, recipient_blood)) {
+            if (isCompatible(blood_type, recipient_blood, action)) {
                 hasStocks = true;
-                stocks += getCompatibleStockHTML(stock, blood_type);
+                stocks += getCompatibleStockHTML(stock, blood_type); 
             }
         });
 
-        if(!hasStocks){
-            stocks = NoCompatibleStockHTML();
+        if (!hasStocks) {
+            stocks = NoCompatibleStockHTML(); 
         }
 
         getInventory.innerHTML = stocks;
 
-        if(localStorage.getItem("type") === "Blood Center") {
-        json_donor.forEach(donor => {
-            if (isCompatible(donor.blood_type, recipient_blood)) {
-                hasDonor = true;
-                donors += getCompatibleDonorHTML(donor);
+        if (localStorage.getItem("type") === "Blood Center") {
+            json_donor.forEach(donor => {
+                if (isCompatible(donor.blood_type, recipient_blood, action)) { 
+                    hasDonor = true;
+                    donors += getCompatibleDonorHTML(donor); 
+                }
+            });
+
+            if (!hasDonor) {
+                donors = NoCompatibleDonorHTML();
             }
-        });
-   
-        if(!hasDonor){
-            donors = NoCompatibleDonorHTML()
+            getDonor.innerHTML = donors;
         }
-        getDonor.innerHTML = donors;
-    }
-}
 };
+        
+
 
 getStocksHistory();
 

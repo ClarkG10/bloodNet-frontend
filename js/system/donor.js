@@ -84,7 +84,10 @@ async function addNewDonation(id) {
             formData.set("previous_donation", formData.get("donation_date"));
             formData.append("_method", "PUT");
 
-            const donorDataResponse = await fetch(backendURL + "/api/donor/" + formData.get("donor_id"), { method:'POST', headers, body: formData });
+            const donorDataResponse = await fetch(backendURL + "/api/donor/" + formData.get("donor_id"), {
+                 method:'POST', headers, body: formData 
+                });
+                
             if(!donorDataResponse.ok){
                 displayToastMessage("update-fail");
                 throw new Error ("Error Updating Previous Donation Field");
@@ -311,7 +314,7 @@ async function getDatas(url = "", keyword = ""){
                                             <input type="hidden" name="user_id" value="${donor.user_id}" />
                                             <input type="hidden" name="blood_type" value="${donor.blood_type}" />
                                             <div class="form-floating mb-3">
-                                                <input type="number" class="form-control" id="units" placeholder="Units" name="units">
+                                                <input type="number" class="form-control" id="units" placeholder="Units" name="units" required>
                                                 <label for="units">Units</label>
                                             </div>
                                             <div class="form-floating mb-3">
@@ -328,11 +331,11 @@ async function getDatas(url = "", keyword = ""){
                                                 <label for="component">Types of Components</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input type="date" class="form-control" id="donation_date" placeholder="Date of Donation" name="donation_date">
+                                                <input type="date" class="form-control" id="donation_date" placeholder="Date of Donation" name="donation_date" required>
                                                 <label for="donation_date">Date of Donation</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input type="file" class="form-control" id="laboratory_attachment" name="laboratory_attachment">
+                                                <input type="file" class="form-control" id="laboratory_attachment" name="laboratory_attachment" required>
                                                 <label for="laboratory_attachment">Laboratory Attachment</label>
                                             </div>
                                             <button type="submit" class="updateButton w-100 create_${donor.donor_id} addDonation" data-id="${donor.donor_id}">Submit</button>

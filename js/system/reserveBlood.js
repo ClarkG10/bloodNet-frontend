@@ -5,6 +5,11 @@ userlogged();
 setRoleAndPermission();
 getPendingRequest();
 
+const headers = {
+    Accept: "application/json",
+    Authorization: "Bearer " + localStorage.getItem("token"),
+};
+
 const inventory_form = document.getElementById("inventory_form");
 const generateReportButton = document.getElementById("generateInventoryReport");
 
@@ -562,94 +567,121 @@ const getDonor = document.getElementById("donors");
 
     getDonor.innerHTML = `<div class="d-flex mt-1" >
         <div class="no-body flex-grow-1 my-2">Search for compatible donors</div></div>`
-
+        
 blood_compatibility_form.onsubmit = async (e) => {
     e.preventDefault();
 
     const placeholder = `<div class="d-flex shadow-sm">
-          <div class="no-body flex-grow-1 my-2"><span class="spinner-border" role="status"></span></div></div>`
+            <div class="no-body flex-grow-1 my-2"><span class="spinner-border" role="status"></span></div></div>`
 
     getInventory.innerHTML = placeholder;
     getDonor.innerHTML = placeholder;
 
     const formData = new FormData(blood_compatibility_form); 
     const recipient_blood = formData.get("blood_type");
+    const action = formData.get("action"); 
 
-    const reservebloodResponse = await fetch(backendURL + "/api/reserveblood/all", {
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-    });
 
-    const donorResponse = await fetch(backendURL + "/api/donor/all", {
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-    });
+        const reserveResponse = await fetch(backendURL + "/api/reserveblood/all", { headers });
+        const donorResponse = await fetch(backendURL + "/api/donor/all", { headers });
 
-    const json_reserveblood = await reservebloodResponse.json();
-    const json_donor = await donorResponse.json();
+        if (!reserveResponse.ok || !donorResponse.ok) {
+            throw new Error("Failed to fetch data");
+        }
 
-    if (reservebloodResponse.ok && donorResponse.ok) {
+        const json_reserve = await reserveResponse.json();
+        const json_donor = await donorResponse.json();
+
         let stocks = "";
         let donors = "";
         let hasStocks = false;
         let hasDonor = false;
 
-        const isCompatible = (donor_blood, recipient_blood) => {
-            const compatibilityChart = {
+        const compatibilityChart = {
+            donate: {
+                "O-": ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
+                "O+": ["O+", "A+", "B+", "AB+"],
+                "A-": ["A-", "A+", "AB-", "AB+"],
+                "A+": ["A+", "AB+"],
+                "B-": ["B-", "B+", "AB-", "AB+"],
+                "B+": ["B+", "AB+"],
+                "AB-": ["AB-", "AB+"],
+                "AB+": ["AB+"]
+            },
+            receive: {
                 "O-": ["O-"],
                 "O+": ["O-", "O+"],
                 "A-": ["A-", "O-"],
-                "A+": ["A+", "A-", "O-", "O+"],
+                "A+": ["A+", "A-", "O+", "O-"],
                 "B-": ["B-", "O-"],
-                "B+": ["B+", "B-",  "O-", "O+"],
+                "B+": ["B+", "B-", "O+", "O-"],
                 "AB-": ["AB-", "B-", "O-", "A-"],
-                "AB+": ["AB+", "AB-", "A-","A+","B+","B-","O-","O+",]
-            };
-            return compatibilityChart[recipient_blood].includes(donor_blood);
+                "AB+": ["AB+", "AB-", "A+", "A-", "B+", "B-", "O+", "O-"]
+            }
+        }
+
+        const isCompatible = (bloodType, recipientBlood, action) => {
+            if (!compatibilityChart[action]) {
+                return false; 
+            }
+            return compatibilityChart[action][recipientBlood].includes(bloodType);
         };
 
-        json_reserveblood.forEach(stock => { 
-            let blood_type = stock.blood_type.concat(stock.rh_factor);
-            if (isCompatible(blood_type, recipient_blood)) {
+        json_reserve.forEach(stock => {
+            let blood_type = stock.blood_type + stock.rh_factor;
+            if (isCompatible(blood_type, recipient_blood, action)) {
                 hasStocks = true;
-
-                stocks += `<div class="d-flex mt-1 shadow-sm">
-                              <div class="has-body flex-grow-1">${blood_type}</div>
-                              <div class="has-body flex-grow-1">${stock.component}</div>
-                              <div class="has-body flex-grow-1">${stock.avail_blood_units}</div>
-                           </div>`;
+                stocks += getCompatibleStockHTML(stock, blood_type);
             }
         });
 
-        if(!hasStocks){
-            stocks = `<div class="d-flex mt-1">
-          <div class="no-body flex-grow-1 my-2">No Available Stocks</div></div>`
+        if (!hasStocks) {
+            stocks = NoCompatibleStockHTML(); 
         }
 
         getInventory.innerHTML = stocks;
 
-        if(localStorage.getItem("type") === "Blood Center") {
-        json_donor.forEach(donor => {
-            if (isCompatible(donor.blood_type, recipient_blood)) {
-                hasDonor = true;
-                donors += `<div class="d-flex mt-1 shadow-sm">
+        if (localStorage.getItem("type") === "Blood Center") {
+            json_donor.forEach(donor => {
+                if (isCompatible(donor.blood_type, recipient_blood, action)) {
+                    hasDonor = true;
+                    donors += getCompatibleDonorHTML(donor); 
+                }
+            });
+
+            if (!hasDonor) {
+                donors = NoCompatibleDonorHTML(); 
+            }
+            getDonor.innerHTML = donors;
+        }
+};
+        
+
+        
+function getCompatibleStockHTML(stock, blood_type) {
+    return `<div class="d-flex mt-1 shadow-sm">
+                              <div class="has-body flex-grow-1">${blood_type}</div>
+                              <div class="has-body flex-grow-1">${stock.component}</div>
+                              <div class="has-body flex-grow-1">${stock.avail_blood_units}</div>
+                           </div>`
+}
+
+function NoCompatibleStockHTML(){
+    return `<div class="d-flex mt-1">
+          <div class="no-body flex-grow-1 my-2">No Available Stocks</div></div>`
+}
+
+function getCompatibleDonorHTML(donor){
+    return `<div class="d-flex mt-1 shadow-sm">
                               <div class="has-body flex-grow-1">${donor.fullname}</div>
                               <div class="has-body flex-grow-1">${donor.blood_type}</div>
                               <div class="has-body flex-grow-1">${donor.address}</div>
                               <div class="has-body flex-grow-1">${donor.phonenumber}</div>
                               <div class="has-body flex-grow-1"><span class="bg-secondary-subtle py-2 px-4 rounded-4 ${donor.status === "Active" ? "text-success" : "text-danger"}" >${donor.status}</span></div>
-                           </div>`;
-            }
-        });
-        if(!hasDonor){
-            donors = `<div class="d-flex mt-1">
-          <div class="no-body flex-grow-1 my-2">No Compatible Donor</div></div>`
-        }
-        getDonor.innerHTML = donors;
-    }
+                           </div>`
 }
-};
+
+function NoCompatibleDonorHTML(){
+    return `<div class="d-flex mt-1">
+          <div class="no-body flex-grow-1 my-2">No Compatible Donor</div></div>`
+}

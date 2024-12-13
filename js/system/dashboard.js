@@ -70,9 +70,11 @@ async function getDatas() {
     function handleEvents(events) {
         let eventHTML = "";
         let hasEvents = events.some(event => event.status === "Scheduled");
-        if (hasEvents) {
-            events.slice(-4).reverse().forEach(event => {
+        if(hasEvents) {
+            events.reverse().slice(-4).forEach((event) => {
+              if(event.status === "Scheduled"){
                     eventHTML += createEventHTML(event);
+              }   
             });
         } else {
             eventHTML = createNoEventsHTML();
@@ -86,7 +88,7 @@ async function getDatas() {
         let hasRequest = requests.some(request => request.status === "Pending");
         if (hasRequest) {
             requests.forEach(request => {
-                if (request.status === "Pending") {
+                if (request.status === "Pending"){
                   const condition = localStorage.getItem("type") === "Blood Center" ? "request.receiver_id === organizations[0].user_id" : "request.user_id === organizations[0].user_id"
                   const orgType = localStorage.getItem("type");
                   if(condition){
@@ -201,14 +203,6 @@ function createEventHTML(event) {
             <tr>
               <td><strong>Description:</strong></td>
               <td class="ps-4">${event.description}</td>
-            </tr>
-            <tr>
-              <td><strong>Gender:</strong></td>
-              <td class="ps-4">${event.gender}</td>
-            </tr>
-            <tr>
-              <td><strong>Weight:</strong></td>
-              <td class="ps-4">${event.weight}</td>
             </tr>
             <tr>
               <td><strong>Minimum Age:</strong></td>
